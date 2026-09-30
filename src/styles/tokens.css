@@ -1,25 +1,73 @@
+/* CITi visual identity tokens. Values are based on the supplied reference. */
 @import '@fontsource-variable/inter-tight';
 @import "tailwindcss";
 
 :root {
-  --ink: #f7faf7;
-  --muted: rgba(247, 250, 247, .65);
-  --paper: #0a0a0a;
-  --surface: #0f0f0f;
-  --surface-soft: #121513;
-  --line: rgba(255, 255, 255, .1);
-  --line-strong: rgba(255, 255, 255, .2);
-  --lime: #50e676;
-  --lime-dark: #19a946;
-  --sans: 'Inter Tight', 'Arial Narrow', sans-serif;
+  --citi-black: #0a0a0a;
+  --citi-white: #ffffff;
+  --citi-green: #00db59;
+  --citi-green-hover: #1de872;
+  --citi-green-deep-1: #001809;
+  --citi-green-deep-2: #000c05;
+  --citi-green-deep-3: #000a01;
+  --citi-surface: #0f1c10;
+  --citi-surface-ghost: #0f2213;
+  --citi-border: rgba(255, 255, 255, .1);
+  --citi-border-green: rgba(0, 219, 89, .4);
+  --citi-text: #e3e9e5;
+  --citi-text-muted: #b4b4b4;
+  --citi-text-label: #a8b1aa;
+  --font-sans: 'Inter Tight', 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --tracking-tight: -.03em;
+  --tracking-label: .2em;
+  --text-display: clamp(2.5rem, 6vw, 4.5rem);
+  --text-h1: clamp(2rem, 4vw, 3rem);
+  --text-h2: clamp(1.5rem, 2.6vw, 2rem);
+  --text-h3: 1.375rem;
+  --text-body: 1.0625rem;
+  --text-small: .875rem;
+  --text-micro: .6875rem;
+  --radius-pill: 9999px;
   --radius-card: 32px;
-  --radius-pill: 999px;
+  --radius-card-lg: 40px;
+  --radius-media: 24px;
+  --container: 1200px;
+  --reading-width: 700px;
+  --gap-grid: 32px;
+  --nav-height: 64px;
+
+  /* Aliases kept for the existing visual components. */
+  --ink: var(--citi-white);
+  --muted: rgba(227, 233, 229, .65);
+  --paper: var(--citi-black);
+  --surface: var(--citi-surface);
+  --surface-soft: var(--citi-surface-ghost);
+  --line: var(--citi-border);
+  --line-strong: rgba(255, 255, 255, .2);
+  --lime: var(--citi-green);
+  --lime-dark: var(--citi-green-hover);
+  --sans: var(--font-sans);
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; background: var(--paper); }
-body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); }
-::selection { background: var(--lime); color: #061009; }
+html { scroll-behavior: smooth; background: var(--citi-black); }
+body { margin: 0; background: var(--citi-black); color: var(--citi-text); font-family: var(--font-sans); font-size: var(--text-body); line-height: 1.6; -webkit-font-smoothing: antialiased; }
 a { color: inherit; text-decoration: none; }
 button, input { font: inherit; }
-button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--lime); outline-offset: 4px; }
+button:focus-visible, a:focus-visible, input:focus-visible, :focus-visible { outline: 2px solid var(--citi-green); outline-offset: 3px; }
+::selection { background: var(--citi-green); color: var(--citi-black); }
+
+.section-glow { background: radial-gradient(120% 80% at 0% 50%, #04200e 0%, var(--citi-green-deep-2) 55%, var(--citi-green-deep-3) 100%); }
+.card { position: relative; overflow: hidden; background: var(--citi-surface); border: 1px solid var(--citi-border); border-radius: var(--radius-card); }
+.card:hover { border-color: var(--citi-border-green); }
+.ghost-number { position: absolute; color: var(--citi-surface-ghost); font-weight: var(--weight-bold); font-size: 16rem; line-height: 1; pointer-events: none; user-select: none; }
+.btn-primary { display: inline-flex; align-items: center; gap: .5rem; padding: .85rem 1.5rem; border-radius: var(--radius-pill); background: var(--citi-green); color: var(--citi-black); font-weight: var(--weight-semibold); transition: background .2s ease; }
+.btn-primary:hover { background: var(--citi-green-hover); }
+.btn-secondary { display: inline-flex; align-items: center; padding: .85rem 1.5rem; border: 1px solid rgba(255,255,255,.2); border-radius: var(--radius-pill); color: var(--citi-white); font-weight: var(--weight-semibold); }
+.label-vertical { writing-mode: vertical-rl; transform: rotate(180deg); color: var(--citi-green); font-size: var(--text-micro); font-weight: var(--weight-semibold); letter-spacing: var(--tracking-label); text-transform: uppercase; }
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
