@@ -1,9 +1,11 @@
 ---
 title: "IA na prática: onde a curiosidade encontra o critério"
 excerpt: "Explorar novas possibilidades pede entusiasmo, mas colocar inteligência artificial no cotidiano pede responsabilidade."
-date: "21 ago 2024"
-category: "Tecnologia"
-readTime: "5 min de leitura"
+meta_description: "Como experimentar inteligência artificial no cotidiano com critério, contexto e responsabilidade."
+date: "2024-08-21"
+categoria: "inovacao"
+etapa_funil: "awareness"
+cta_tipo: "newsletter"
 featured: false
 accent: "orange"
 author: "CITi"

@@ -1,9 +1,11 @@
 ---
 title: "Design que conecta pessoas, negócios e tecnologia"
 excerpt: "Uma interface pode ser bonita. Uma experiência bem pensada também torna o trabalho mais claro, leve e possível."
-date: "04 set 2024"
-category: "Design"
-readTime: "4 min de leitura"
+meta_description: "Como o design organiza complexidade e torna o trabalho mais claro para pessoas e negócios."
+date: "2024-09-04"
+categoria: "solucoes"
+etapa_funil: "consideracao"
+cta_tipo: "newsletter"
 featured: false
 accent: "blue"
 author: "CITi"
