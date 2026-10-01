@@ -1,0 +1,44 @@
+# Roda o radar de notícias toda segunda-feira às 8h (horário de Brasília)
+# e abre um Pull Request com o relatório da semana para a curadoria.
+# Nada é publicado automaticamente: o PR só contém o relatório em radar/relatorios/.
+name: Radar semanal de notícias
+
+on:
+  schedule:
+    - cron: '0 11 * * 1'   # 11:00 UTC = 08:00 BRT
+  workflow_dispatch: {}     # permite rodar manualmente pela aba Actions
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Gerar relatório
+        run: npm run radar
+
+      - name: Abrir Pull Request com o relatório
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: radar/semana
+          delete-branch: true
+          add-paths: radar/relatorios/*
+          commit-message: 'radar: relatório semanal de notícias'
+          title: 'Radar da semana — curadoria de notícias'
+          body: |
+            Relatório gerado automaticamente em `radar/relatorios/`.
+
+            **Curadoria:** escolha de 3 a 5 itens, rode `npm run radar:promover -- <ids>` localmente,
+            escreva resumo e "por que importa" e mova os arquivos para `src/content/noticias/`.
+          labels: radar

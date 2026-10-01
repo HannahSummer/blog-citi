@@ -1,3 +1,5 @@
+import { getCategory } from './categorias'
+
 export interface NewsItem {
   slug: string
   title: string
@@ -23,7 +25,8 @@ function parse(raw: string) {
 
 export const news: NewsItem[] = Object.entries(markdownFiles).map(([path, raw]) => {
   const { metadata, content } = parse(raw)
-  return { slug: path.split('/').pop()?.replace('.md', '') ?? path, title: metadata.title ?? '', date: metadata.date ?? '', category: metadata.categoria ?? '', source: metadata.fonte ?? '', link: metadata.link ?? '#', summary: metadata.resumo ?? '', content }
+  const categorySlug = metadata.categoria ?? 'negocios'
+  return { slug: path.split('/').pop()?.replace('.md', '') ?? path, title: metadata.title ?? '', date: metadata.date ?? '', category: getCategory(categorySlug)?.label ?? 'Negócios', source: metadata.fonte ?? '', link: metadata.link ?? '#', summary: metadata.resumo ?? '', content }
 }).sort((first, second) => second.date.localeCompare(first.date))
 
 export function getNewsBySlug(slug: string | undefined) { return news.find((item) => item.slug === slug) }

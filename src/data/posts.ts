@@ -1,3 +1,5 @@
+import { getCategory } from './categorias'
+
 export type Accent = 'lime' | 'blue' | 'orange'
 export type FunnelStage = 'awareness' | 'consideracao' | 'intencao'
 export type CtaType = 'newsletter' | 'material-rico' | 'diagnostico'
@@ -38,11 +40,6 @@ function parseFrontMatter(raw: string): { metadata: RawFrontMatter; content: str
 }
 
 function readTime(content: string) { return `${Math.max(1, Math.ceil(content.split(/\s+/).filter(Boolean).length / 200))} min de leitura` }
-function formatDate(date: string) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return date
-  return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(`${date}T12:00:00`)).replace('.', '')
-}
-
 export const posts: Post[] = Object.entries(markdownFiles).map(([path, raw]) => {
   const { metadata, content } = parseFrontMatter(raw)
   const slug = path.split('/').pop()?.replace('.md', '') ?? path
@@ -50,7 +47,7 @@ export const posts: Post[] = Object.entries(markdownFiles).map(([path, raw]) => 
   if (!metadata.title || !metadata.excerpt || !metadata.author) console.warn(`[posts] Front matter incompleto: ${slug}`)
   return {
     slug, title: String(metadata.title ?? ''), excerpt: String(metadata.excerpt ?? ''), metaDescription: String(metadata.meta_description ?? metadata.excerpt ?? ''),
-    date: String(metadata.date ?? ''), category: String(metadata.categoryLabel ?? metadata.categoria ?? 'Negócios'), categorySlug,
+    date: String(metadata.date ?? ''), category: getCategory(categorySlug)?.label ?? 'Negócios', categorySlug,
     funnelStage: String(metadata.etapa_funil ?? 'awareness') as FunnelStage, ctaType: String(metadata.cta_tipo ?? 'newsletter') as CtaType,
     ctaLink: metadata.cta_link ? String(metadata.cta_link) : undefined, cover: metadata.cover ? String(metadata.cover) : undefined,
     author: String(metadata.author ?? 'CITi'), featured: Boolean(metadata.featured), accent: String(metadata.accent ?? 'lime') as Accent,

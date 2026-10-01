@@ -4,7 +4,23 @@ Protótipo do blog institucional do CITi, empresa júnior de tecnologia B2B da U
 
 ## Stack
 
-React 18, TypeScript, Vite, Tailwind CSS v4, React Router, React Markdown, React Helmet Async, Lucide React e Inter Tight local via Fontsource. Não há backend, banco, CDN, chaves de API ou envio real de formulários.
+React 18, TypeScript, Vite, Tailwind CSS v4, React Router, React Markdown, React Helmet Async, Lucide React, Inter Tight local via Fontsource e Supabase opcional. Sem `.env`, os formulários continuam em modo demonstração.
+
+## Documentação
+
+O índice editorial e operacional está em [docs/README.md](docs/README.md). Ele aponta para o guia de conteúdo, notícias, radar automático e estratégia editorial.
+
+## Radar de notícias
+
+O radar coleta feeds, pontua candidatos e gera relatórios para revisão humana:
+
+```bash
+npm run radar -- --checar-fontes
+npm run radar
+npm run radar:promover -- <id> <id>
+```
+
+Os rascunhos ficam em `radar/rascunhos/` e só aparecem no site depois de revisados e movidos para `src/content/noticias/`.
 
 ## Rodar
 
@@ -36,6 +52,7 @@ O `Dockerfile` e o `docker-compose.yml` não precisam de alterações para esta 
 | --- | --- |
 | `npm run dev` | Servidor de desenvolvimento |
 | `npm run typecheck` | Checagem TypeScript |
+| `npm run radar:tipos` | Checagem TypeScript do radar |
 | `npm run build` | Build de produção |
 | `npm run preview` | Preview do build |
 
@@ -49,7 +66,7 @@ O `Dockerfile` e o `docker-compose.yml` não precisam de alterações para esta 
 | `/blog/artigos?categoria=gestao` | Lista filtrada por categoria |
 | `/blog/artigos/:slug` | Artigo individual |
 | `/blog/noticias` | Notícias mock agrupadas em lista |
-| `/blog/diagnostico?origem=<slug>` | Formulário de diagnóstico mock |
+| `/blog/diagnostico?origem=<slug>` | Formulário de diagnóstico demo ou Supabase |
 | `*` | Página 404 |
 
 ## Estrutura
@@ -67,7 +84,8 @@ src/
 │   └── noticias/*.md
 ├── data/                   # Posts, notícias e categorias
 ├── hooks/useUtm.ts
-├── services/leads.ts       # Mocks de newsletter e diagnóstico
+├── services/leads.ts       # Persistência Supabase ou modo demonstração
+├── lib/supabase.ts         # Cliente Supabase opcional
 └── styles/
     ├── tokens.css
     └── app.css
@@ -128,6 +146,7 @@ As notícias atuais têm `[EXEMPLO]`, `Fonte exemplo` e `#` de propósito, para 
 - Menu, hero, metodologia e sobre: `src/config/site.ts`
 - Categorias: `src/data/categorias.ts`
 - Formulários mock: `src/services/leads.ts`
+- Supabase e migração: `src/lib/supabase.ts` e `supabase/migrations/`
 - UTM: `src/hooks/useUtm.ts`
 - Logo: `public/assets/logo-citi.png`
 
@@ -138,7 +157,7 @@ As notícias atuais têm `[EXEMPLO]`, `Fonte exemplo` e `#` de propósito, para 
 - Confirmar prazo de retorno com o Comercial.
 - Definir a política de privacidade.
 - Fornecer a logo SVG oficial, se disponível.
-- Integrar `submitDiagnostico` e `subscribeNewsletter` ao backend/CRM.
+- Integrar o aviso de novos leads ao backend/CRM ou webhook do Supabase.
 - Trocar notícias mock por curadoria aprovada.
 - Revisar acessibilidade, SEO e conteúdo com um dev antes da publicação.
 
