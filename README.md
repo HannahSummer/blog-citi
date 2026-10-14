@@ -66,7 +66,10 @@ O `Dockerfile` e o `docker-compose.yml` não precisam de alterações para esta 
 | `/blog/artigos?categoria=gestao` | Lista filtrada por categoria |
 | `/blog/artigos/:slug` | Artigo individual |
 | `/blog/noticias` | Notícias mock agrupadas em lista |
-| `/blog/diagnostico?origem=<slug>` | Formulário de diagnóstico demo ou Supabase |
+| `/blog/diagnostico?origem=<slug>` | Quiz de autoavaliação e CTA de contato |
+| `/blog/sobre` | Listagem de momentos do CITi |
+| `/blog/sobre/:slug` | Momento individual |
+| `/blog/sobre/quem-somos` | Quem somos, método e projetos |
 | `*` | Página 404 |
 
 ## Estrutura
@@ -81,7 +84,8 @@ src/
 ├── pages/                  # Home, artigos, notícias, diagnóstico e 404
 ├── content/
 │   ├── posts/*.md
-│   └── noticias/*.md
+│   ├── noticias/*.md
+│   └── momentos/*.md
 ├── data/                   # Posts, notícias e categorias
 ├── hooks/useUtm.ts
 ├── services/leads.ts       # Persistência Supabase ou modo demonstração
@@ -117,7 +121,7 @@ accent: "lime"
 Texto do artigo em Markdown.
 ```
 
-Categorias: `negocios`, `solucoes`, `inovacao`, `institucional` e `gestao`. CTAs: `newsletter`, `diagnostico` e `material-rico`.
+Categorias: `negocios`, `solucoes` e `gestao`. Subtemas: `marketing-comercial`, `inovacao` e `financeiro`. CTAs: `newsletter`, `diagnostico` e `material-rico`.
 
 ## Publicar uma notícia
 
@@ -167,5 +171,9 @@ As notícias atuais têm `[EXEMPLO]`, `Fonte exemplo` e `#` de propósito, para 
 - `/blog/artigos?categoria=gestao`: filtro e URL.
 - `/blog/artigos/:slug`: leitura, CTA e artigos relacionados.
 - `/blog/noticias`: âncoras e links de fonte.
-- `/blog/diagnostico?origem=<slug>&utm_source=linkedin`: validação e payload mock no console.
+- `/blog/diagnostico?origem=<slug>&utm_source=linkedin`: quiz completo, cada nível de resultado e CTA externo.
+- `/blog/sobre`: listagem de momentos e filtro por tipo.
+- `/blog/sobre/:slug`: leitura de um momento, galeria opcional e relacionados.
+- `/blog/destaques/...`: redirect legado para `/blog/sobre`.
+- `/blog/artigos?categoria=solucoes`: filtro principal e subtemas publicados.
 - Atalho `/`, busca, menu mobile, Escape e navegação por teclado.

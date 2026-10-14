@@ -1,7 +1,7 @@
 ---
 title: "[EXEMPLO] Uso responsável de IA entra na agenda de produtos"
 date: "2026-09-15"
-categoria: "inovacao"
+categoria: "solucoes"
 fonte: "Fonte exemplo"
 link: "#"
 resumo: "Equipes de produto discutem critérios de revisão humana, privacidade e qualidade para aplicações de IA."

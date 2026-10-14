@@ -24,11 +24,9 @@ Um post está alinhado quando responde "sim" a três perguntas:
 
 | Categoria | % | Papel |
 |---|---|---|
-| Negócios | 30% | Porta de entrada: problemas e decisões na linguagem do gestor |
-| Soluções | 25% | Prova: como problemas viram soluções, com cases e bastidores |
-| Gestão | 20% | Operação: processos, produtividade, medição |
-| Inovação | 15% | Contexto: tendências com olhar crítico, sempre aplicadas |
-| Institucional | 10% | Confiança: pessoas, cultura e método do CITi. Mais que isso vira autopromoção |
+| Negócios | 35% | Porta de entrada: problemas e decisões na linguagem do gestor |
+| Soluções | 40% | Prova: como problemas viram soluções, com cases e bastidores |
+| Gestão | 25% | Operação: processos, produtividade, medição |
 
 ## Territórios temáticos prioritários
 
@@ -58,7 +56,7 @@ Fonte: [TI Inside](https://tiinside.com.br/23/09/2026/brasil-entra-em-uma-nova-f
 
 ### 6. Ecossistema Recife e Porto Digital
 O Porto Digital fechou 2025 com faturamento de R$ 7,4 bilhões e mais de 540 empresas, e declarou a meta de atrair companhias de outros setores que passaram a ter a tecnologia no centro do negócio. Esse perfil é exatamente o nosso ICP.
-**Ângulo do CITi:** conteúdo e notícias locais geram proximidade e diferenciam o blog de portais nacionais. Bom território para a seção de notícias e para o institucional.
+**Ângulo do CITi:** conteúdo e notícias locais geram proximidade e diferenciam o blog de portais nacionais. Bom território para a seção de notícias e para a confiança na marca.
 Fontes: [Movimento Econômico](https://movimentoeconomico.com.br/geral/redacao/2026/03/27/porto-digital-cresce-19-e-atinge-r-74-bilhoes-em-2025/) · [Movimento Econômico — Banco Inter](https://movimentoeconomico.com.br/?p=127059)
 
 ## As 6 primeiras pautas (60 dias)
@@ -67,7 +65,7 @@ Ordem pensada para cobrir o funil do topo ao fundo e deixar o primeiro material 
 
 | # | Título provisório | Território | Categoria | Etapa | CTA | Especialista |
 |---|---|---|---|---|---|---|
-| 1 | Sua empresa já usa IA. Qual problema ela está resolvendo? | 1 | inovação | awareness | newsletter | time de dados/IA |
+| 1 | Sua empresa já usa IA. Qual problema ela está resolvendo? | 1 | soluções / inovação | awareness | newsletter | time de dados/IA |
 | 2 | Comprar, adaptar ou construir: como decidir o software da sua empresa | 2 | soluções | consideração | material rico: *checklist de decisão* | gerente de projetos |
 | 3 | Quanto custa o retrabalho? Como mapear tarefas manuais antes de automatizar | 3 | gestão | awareness | newsletter | Discovery |
 | 4 | O que um Discovery responde que um MVP sozinho não responde | 4 | soluções | intenção | diagnóstico | Discovery |
@@ -84,8 +82,8 @@ Pré-requisitos: a pauta 2 precisa do checklist (material rico) pronto; a pauta 
 - Digitalizar sem burocratizar: o processo não pode ficar mais lento que o papel.
 - LGPD em projetos digitais: o que decidir no início para não refazer depois.
 - Escopo que cresce sozinho: como evitar em projetos de software.
-- Por dentro do CITi: como uma empresa júnior entrega projetos B2B (institucional).
-- O que as empresas do Porto Digital estão buscando em tecnologia (institucional/negócios, com dados do radar).
+- Por dentro do CITi: como uma empresa júnior entrega projetos B2B (Sobre o CITi).
+- O que as empresas do Porto Digital estão buscando em tecnologia (negócios, com dados do radar).
 
 ## Como pesquisar novos temas
 

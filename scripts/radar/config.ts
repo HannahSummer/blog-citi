@@ -6,7 +6,7 @@
  * Não é preciso mexer nos outros arquivos para mudar o que o radar procura.
  */
 
-export type Categoria = 'negocios' | 'solucoes' | 'inovacao' | 'institucional' | 'gestao'
+export type Categoria = 'negocios' | 'solucoes' | 'gestao'
 
 export interface Fonte {
   /** Nome exibido no relatório e usado no campo `fonte` da notícia. */
@@ -68,9 +68,7 @@ function googleNews(consulta: string): string {
  */
 export const PALAVRAS_POR_CATEGORIA: Record<Categoria, string[]> = {
   negocios: ['crescimento', 'faturamento', 'investimento', 'mercado', 'estrategia', 'competitividade', 'receita', 'expansao', 'pme', 'pequenas empresas', 'medias empresas'],
-  solucoes: ['software', 'plataforma', 'aplicativo', 'sistema', 'automacao', 'mvp', 'produto digital', 'dados', 'integracao', 'legado', 'nuvem', 'desenvolvimento'],
-  inovacao: ['inteligencia artificial', ' ia ', 'ia generativa', 'agentes', 'inovacao', 'startup', 'tendencia', 'pesquisa aponta', 'estudo'],
-  institucional: ['empresa junior', 'ufpe', 'cin', 'universidade', 'porto digital', 'recife', 'pernambuco', 'rec\'n\'play', 'residencia tecnologica'],
+  solucoes: ['software', 'plataforma', 'aplicativo', 'sistema', 'automacao', 'mvp', 'produto digital', 'dados', 'integracao', 'legado', 'nuvem', 'desenvolvimento', 'inteligencia artificial', ' ia ', 'ia generativa', 'agentes', 'inovacao', 'startup', 'tendencia', 'pesquisa aponta', 'estudo'],
   gestao: ['processo', 'produtividade', 'eficiencia', 'gestao', 'operacao', 'retrabalho', 'custo', 'lideranca', 'governanca', 'roi', 'retorno'],
 }
 

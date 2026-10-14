@@ -1,11 +1,13 @@
 export const siteConfig = {
   name: 'Blog CITi',
+  diagnosticoComBanco: false,
+  ctaContatoUrl: '',
   linkedin: 'https://www.linkedin.com/company/citi-ufpe/',
   menu: [
     { label: 'Nossa Metodologia', href: '/blog#metodologia' },
     { label: 'Blog', href: '/blog/artigos' },
     { label: 'Notícias', href: '/blog/noticias' },
-    { label: 'Sobre', href: '/blog#sobre' },
+    { label: 'Sobre o CITi', href: '/blog/sobre' },
   ],
   hero: {
     eyebrow: 'BLOG DO CITi',
@@ -28,5 +30,6 @@ export const siteConfig = {
     title: 'Somos o time que entende antes de construir.',
     description: 'Uma empresa júnior de tecnologia do CIn-UFPE, B2B, que transforma problemas de negócio em soluções digitais.',
     journey: ['Problema de negócio', 'Discovery', 'Delivery', 'Valor gerado'],
+    teamPhoto: '/images/sobre/equipe.webp',
   },
 } as const

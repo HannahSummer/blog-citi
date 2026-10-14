@@ -24,7 +24,8 @@ O conteúdo mora em arquivos Markdown dentro do repositório. Não existe banco 
 ```
 src/content/posts/       → artigos do blog (1 arquivo .md por post)
 src/content/noticias/    → notícias publicadas (1 arquivo .md por notícia)
-src/data/categorias.ts   → as 5 categorias e suas descrições
+src/data/categorias.ts   → as 3 categorias principais e suas descrições
+src/data/subtemas.ts     → subtemas vinculados às categorias
 src/config/site.ts       → menu, textos do hero, da Metodologia e do Sobre
 public/assets/           → logo e imagens locais do protótipo
 scripts/radar/           → radar automático de notícias
