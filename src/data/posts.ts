@@ -1,5 +1,6 @@
 import { getCategory } from './categorias'
 import { getSubtema } from './subtemas'
+import { parseFrontMatter } from '../lib/frontMatter'
 
 export type Accent = 'lime' | 'blue' | 'orange'
 export type FunnelStage = 'awareness' | 'consideracao' | 'intencao'
@@ -26,21 +27,7 @@ export interface Post {
   readTime: string
 }
 
-type RawFrontMatter = Record<string, string | boolean>
 const markdownFiles = import.meta.glob<string>('../content/posts/*.md', { eager: true, query: '?raw', import: 'default' })
-
-function parseFrontMatter(raw: string): { metadata: RawFrontMatter; content: string } {
-  const match = raw.match(/^---\s*([\s\S]*?)\s*---\s*([\s\S]*)$/)
-  if (!match) return { metadata: {}, content: raw }
-  const metadata = Object.fromEntries(match[1].split('\n').flatMap((line) => {
-    const separator = line.indexOf(':')
-    if (separator < 0) return []
-    const key = line.slice(0, separator).trim()
-    const value = line.slice(separator + 1).trim().replace(/^['"]|['"]$/g, '')
-    return [[key, value === 'true' ? true : value === 'false' ? false : value]]
-  })) as RawFrontMatter
-  return { metadata, content: match[2].trim() }
-}
 
 function readTime(content: string) { return `${Math.max(1, Math.ceil(content.split(/\s+/).filter(Boolean).length / 200))} min de leitura` }
 export const posts: Post[] = Object.entries(markdownFiles).map(([path, raw]) => {

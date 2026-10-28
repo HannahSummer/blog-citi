@@ -1,7 +1,7 @@
 ---
-title: "Produto digital com valor: comece pelo problema, não pela tecnologia"
+title: "Produto digital com valor: comece pelo problema"
 excerpt: "Como times enxutos podem transformar uma pergunta difícil em uma solução digital que realmente faz diferença."
-meta_description: "Times enxutos podem transformar perguntas difíceis em soluções digitais começando pelo problema real."
+meta_description: "Times enxutos podem transformar perguntas difíceis em soluções digitais começando pelo problema real e criando valor para pessoas e negócios."
 date: "2024-09-18"
 categoria: "negocios"
 etapa_funil: "intencao"
@@ -9,6 +9,7 @@ cta_tipo: "diagnostico"
 featured: true
 accent: "lime"
 author: "CITi"
+palavras_chave: "produto digital, estrategia, problemas de negocio"
 ---
 
 Construir um produto digital não começa com a escolha da tecnologia. Começa com a coragem de olhar para um problema de frente.

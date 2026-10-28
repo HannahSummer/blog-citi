@@ -1,8 +1,8 @@
 export const sobreConfig = {
   carrossel: [
     { src: '/images/sobre/equipe-palco-enej.webp', alt: 'Equipe do CITi no palco do ENEJ', eyebrow: 'Nosso movimento', legenda: 'CITi no ENEJ · Premiação Somos Movimento' },
-    { src: '/images/sobre/equipe-sebrae.webp', alt: 'Equipe do CITi em atividade no Sebrae', eyebrow: 'Na prática', legenda: 'Pessoas que aprendem construindo juntas' },
-    { src: '/images/sobre/trofeu-enej.webp', alt: 'Troféu recebido pelo CITi no ENEJ', eyebrow: 'Reconhecimento', legenda: 'Uma conquista construída em conjunto' },
+    { src: '/images/sobre/equipe-sebrae.webp', alt: 'Equipe do CITi reunida durante o ENEJ', eyebrow: 'Na prática', legenda: 'Pessoas que aprendem construindo juntas' },
+    { src: '/images/sobre/trofeu-enej.webp', alt: 'Equipe do CITi celebrando durante o ENEJ', eyebrow: 'Reconhecimento', legenda: 'Uma conquista construída em conjunto' },
   ],
   carrosselLabels: { previous: 'Foto anterior', next: 'Próxima foto', pause: 'Pausar carrossel', resume: 'Retomar carrossel' },
   lista: {
@@ -66,8 +66,8 @@ export const sobreConfig = {
     ],
     galleryTitle: 'Pessoas fazem parte do resultado.',
     gallery: [
-      { src: '/images/sobre/equipe-sebrae.webp', alt: 'Equipe do CITi em atividade. Autorização de uso pendente.', fallback: 'Foto da equipe (TODO)' },
-      { src: '/images/sobre/trofeu-enej.webp', alt: 'Troféu do ENEJ. Ano e reconhecimento pendentes de confirmação.', fallback: 'Foto do troféu (TODO)' },
+      { src: '/images/sobre/equipe-sebrae.webp', alt: 'Equipe do CITi reunida durante o ENEJ.', fallback: 'Foto da equipe (TODO)' },
+      { src: '/images/sobre/trofeu-enej.webp', alt: 'Equipe do CITi celebrando durante o ENEJ.', fallback: 'Foto da equipe (TODO)' },
     ],
     ctaTitle: 'Tem um problema importante para entender?',
     ctaText: 'Conte o contexto. A próxima decisão pode começar por uma boa pergunta.',

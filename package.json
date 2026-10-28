@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run validar-artigos && vite build",
+    "novo-artigo": "tsx scripts/novo-artigo.ts",
+    "validar-artigos": "tsx scripts/validar-artigos.ts",
     "typecheck": "tsc --noEmit",
     "radar": "tsx scripts/radar/index.ts",
     "radar:promover": "tsx scripts/radar/promover.ts",

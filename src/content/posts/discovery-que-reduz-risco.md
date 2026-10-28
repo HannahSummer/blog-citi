@@ -1,12 +1,13 @@
 ---
 title: "Discovery que reduz risco antes da entrega"
 excerpt: "Como transformar incerteza em decisões melhores antes de investir em uma solução digital."
-meta_description: "Um processo de Discovery ajuda equipes a reduzir risco e tomar decisões melhores antes de construir um produto digital."
+meta_description: "Um processo de Discovery ajuda equipes a reduzir riscos, validar hipóteses e tomar decisões melhores antes de construir um produto digital com mais segurança."
 date: "2024-10-02"
 categoria: "solucoes"
 etapa_funil: "consideracao"
 cta_tipo: "diagnostico"
 author: "CITi"
+palavras_chave: "discovery, validacao, produto digital"
 featured: false
 accent: "blue"
 ---

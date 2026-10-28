@@ -1,12 +1,13 @@
 ---
 title: "Gestão que dá ritmo sem aumentar a complexidade"
 excerpt: "Processos leves ajudam times a enxergar prioridades, dependências e decisões que estavam escondidas."
-meta_description: "Veja como processos leves ajudam times a organizar prioridades e tomar decisões sem aumentar a burocracia."
+meta_description: "Veja como processos leves ajudam times a organizar prioridades, tornar decisões visíveis e ganhar ritmo sem aumentar a burocracia e o retrabalho diário."
 date: "2024-10-08"
 categoria: "gestao"
 etapa_funil: "awareness"
 cta_tipo: "newsletter"
 author: "CITi"
+palavras_chave: "gestao, processos, produtividade"
 featured: false
 accent: "orange"
 ---

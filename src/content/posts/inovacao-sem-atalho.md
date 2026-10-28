@@ -1,7 +1,7 @@
 ---
 title: "Inovação sem atalho: experimente com critério"
 excerpt: "Novidade só vira valor quando responde a uma pergunta real e pode ser avaliada no cotidiano do negócio."
-meta_description: "Inovação aplicada precisa de uma pergunta real, um experimento pequeno e critérios para avaliar o resultado."
+meta_description: "Inovação aplicada precisa de uma pergunta real, um experimento pequeno e critérios claros para avaliar o resultado no cotidiano do negócio e orientar decisões."
 date: "2024-10-15"
 categoria: "solucoes"
 subtema: "inovacao"
@@ -9,6 +9,7 @@ etapa_funil: "intencao"
 cta_tipo: "material-rico"
 cta_link: "#"
 author: "CITi"
+palavras_chave: "inovacao, experimentacao, estrategia"
 featured: false
 accent: "lime"
 ---

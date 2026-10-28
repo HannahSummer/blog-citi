@@ -1,7 +1,7 @@
 ---
 title: "IA na prática: onde a curiosidade encontra o critério"
 excerpt: "Explorar novas possibilidades pede entusiasmo, mas colocar inteligência artificial no cotidiano pede responsabilidade."
-meta_description: "Como experimentar inteligência artificial no cotidiano com critério, contexto e responsabilidade."
+meta_description: "Como experimentar inteligência artificial no cotidiano com critério, contexto e responsabilidade, conectando inovação a problemas reais do negócio."
 date: "2024-08-21"
 categoria: "solucoes"
 subtema: "inovacao"
@@ -10,6 +10,7 @@ cta_tipo: "newsletter"
 featured: false
 accent: "orange"
 author: "CITi"
+palavras_chave: "inteligencia artificial, inovacao, tecnologia responsavel"
 ---
 
 A inteligência artificial já está presente em muitas conversas sobre futuro. Para transformá-la em resultado, porém, é preciso trazer essa conversa para perto do trabalho real.

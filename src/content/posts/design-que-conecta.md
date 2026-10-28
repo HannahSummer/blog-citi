@@ -1,7 +1,7 @@
 ---
 title: "Design que conecta pessoas, negócios e tecnologia"
 excerpt: "Uma interface pode ser bonita. Uma experiência bem pensada também torna o trabalho mais claro, leve e possível."
-meta_description: "Como o design organiza complexidade e torna o trabalho mais claro para pessoas e negócios."
+meta_description: "Como o design organiza a complexidade e torna o trabalho mais claro para pessoas, equipes e negócios em produtos digitais B2B, com decisões que geram confiança."
 date: "2024-09-04"
 categoria: "solucoes"
 etapa_funil: "consideracao"
@@ -9,6 +9,7 @@ cta_tipo: "newsletter"
 featured: false
 accent: "blue"
 author: "CITi"
+palavras_chave: "design de produto, experiencia do usuario, produtos digitais"
 ---
 
 Design é uma forma de fazer perguntas. Antes de decidir cores, componentes e interações, um bom processo de design tenta entender o que as pessoas precisam realizar e o que está impedindo esse movimento.
