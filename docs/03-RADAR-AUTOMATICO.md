@@ -2,63 +2,82 @@
 
 ## O que ele faz (e o que não faz)
 
-O radar **automatiza a busca e a triagem**. A escolha e a redação continuam humanas.
+O radar **automatiza a busca, a triagem e o rascunho**. A aprovação continua humana.
 
 ```
 Feeds RSS ──► coleta ──► filtro (janela de 7 dias, termos bloqueados)
-         ──► pontuação por palavras-chave e peso da fonte
-         ──► remoção de duplicadas ──► relatório .md com os 25 melhores
-         ──► PR automático no GitHub toda segunda
+         ──► pontuação por palavras-chave e peso da fonte ──► remoção de duplicadas
+         ──► Claude escreve título, resumo e "por que importa" dos 12 melhores
+             e descarta os que não servem ao ICP (até 6 seguem)
+         ──► tabela `noticias` no Supabase, como "pendente"
+         ──► marketing revisa e aprova no painel /blog/admin/noticias
 ```
 
-Ele **não** publica nada, **não** copia o texto das matérias e **não** roda no site. Roda no seu computador ou no GitHub Actions, uma vez por semana.
+Ele **não** publica nada sozinho e **não** copia o texto das matérias: o Claude recebe só título e o trecho curto do feed, e a instrução é escrever com palavras próprias, sem inventar dados. Roda no GitHub Actions toda segunda, ou no seu computador.
 
 ### Por que RSS e não scraping
 
 Raspar o HTML dos portais quebra toda vez que o site muda o layout, muitas vezes viola os termos de uso e pode ser bloqueado. RSS é o canal que os próprios veículos oferecem para distribuir as manchetes, é estável e traz título, link, data e um resumo curto, que é exatamente o que a triagem precisa. Para veículos sem RSS, o radar usa a busca do Google Notícias em formato RSS (confira os termos de uso antes de colocar em produção).
 
-## Instalação (uma vez)
+## Configuração (uma vez)
 
-1. Copie `scripts/radar/`, `radar/` e `.github/workflows/radar-semanal.yml` para a raiz do repositório.
-2. Instale as dependências:
-   ```bash
-   npm i rss-parser
-   npm i -D tsx @types/node
-   ```
-   (O projeto já tem TypeScript e `"type": "module"`, que o radar usa.)
-3. Adicione ao `package.json`:
-   ```json
-   "scripts": {
-     "radar": "tsx scripts/radar/index.ts",
-     "radar:promover": "tsx scripts/radar/promover.ts",
-     "radar:tipos": "tsc -p scripts/radar/tsconfig.json"
-   }
-   ```
-4. Se o `tsconfig.json` da raiz tiver `include`, garanta que ele **não** inclua `scripts/`: o radar tem o próprio `tsconfig`, com tipos de Node, e não deve entrar no build do Vite.
-5. Com Docker, rode os comandos dentro do container: `docker compose exec blog-citi npm run radar`. Depois de instalar pacotes, rode `docker compose up --build`.
+Depois que o Supabase de produção existir (docs/05-DIAGNOSTICO-E-LEADS.md):
 
-## Primeiro uso: validar as fontes
+1. Rode a migração `supabase/migrations/20261028120000_noticias_curadoria.sql` no SQL Editor (depois das duas do diagnóstico).
+2. Cadastre as pessoas editoras (docs/02-NOTICIAS.md → Quem pode aprovar).
+3. No GitHub, em **Settings → Secrets and variables → Actions**, crie:
 
-As URLs de feed em `config.ts` foram inferidas e estão com `verificada: false`. Antes de tudo:
+| Secret | Onde pegar |
+|---|---|
+| `ANTHROPIC_API_KEY` | console.anthropic.com → API Keys (conta do CITi) |
+| `SUPABASE_URL` | Supabase → Project Settings → API → Project URL |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API → `service_role` |
+
+A `service_role` ignora as regras de segurança do banco. Ela só pode existir nos Secrets do GitHub e no terminal de quem roda o radar; **nunca** no `.env` do site nem com prefixo `VITE_`.
+
+**Custo:** até 12 chamadas ao Claude por semana, cada uma com algumas centenas de palavras. Fica na casa de centavos de dólar por semana.
+
+## Fontes mapeadas
+
+Todas testadas em 28/10/2026 com `npm run radar -- --checar-fontes`. Peso 2 = muito alinhada ao ICP.
+
+| Tema | Fontes | Peso |
+|---|---|---|
+| Ecossistema Recife e Porto Digital | Movimento Econômico, Porto Digital, Google Notícias ("Porto Digital"; tecnologia em Recife/PE) | 2 |
+| Pesquisas e fontes primárias | Agência Sebrae, Google Notícias (Cetic.br, TIC Empresas, IBGE) | 2 |
+| | Agência Brasil — Economia | 1 |
+| Soluções e Inovação (software, IA, dados, MVP, legado) | TI Inside, Baguete, MIT Technology Review Brasil, Mobile Time, Startupi, Startups.com.br, Canaltech, Google Notícias (IA nas empresas; transformação digital em PMEs; sistemas legados) | 1 |
+| Gestão e Financeiro | MIT Sloan Review Brasil | 2 |
+| | Exame, NeoFeed, InfoMoney, Contábeis (fiscal e tributário) | 1 |
+| Negócios: Marketing e comercial | Meio & Mensagem, Propmark, Consumidor Moderno | 1 |
+
+Desativadas por bloquearem o radar (erro 403): Diario de Pernambuco e IT Forum. Sem RSS acessível: Cetic.br, IBGE, Computerworld, CIO, HBR Brasil, Mundo do Marketing, E-Commerce Brasil, StartSe (por isso as buscas do Google Notícias).
+
+Para checar de novo:
 
 ```bash
 npm run radar -- --checar-fontes
 ```
 
-Para cada fonte com `OK`, marque `verificada: true`. Para as com `ERRO`, procure o RSS no site do veículo (geralmente um ícone laranja, ou `/feed/`, `/rss`, `/rss.xml` no fim do endereço). Se não existir, desative (`ativa: false`) ou troque por uma busca do Google Notícias.
+Fonte com `ERRO` por algumas semanas seguidas: procure outro RSS do veículo (`/feed/`, `/rss`, `/rss.xml`) ou troque por uma busca do Google Notícias.
 
-## Uso semanal
+## Rodar no computador
 
 ```bash
+# Sem chaves: só o relatório de candidatos em radar/relatorios/
 npm run radar
-# → radar/relatorios/radar-AAAA-MM-DD.md  (leitura)
-# → radar/relatorios/radar-AAAA-MM-DD.json (usado pelo promover)
 
-npm run radar:promover -- porto-digital-cresce-19 metade-das-empresas-usa-ia
-# → radar/rascunhos/<id>.md, com front matter preenchido e campos TODO
+# Fluxo completo (copy + envio ao painel)
+export ANTHROPIC_API_KEY=...            # PowerShell: $env:ANTHROPIC_API_KEY="..."
+export SUPABASE_URL=...
+export SUPABASE_SERVICE_ROLE_KEY=...
+npm run radar:semanal
+# → radar/sugestoes/semana-AAAA-MM-DD.md (prévia da copy) e sugestões no painel
 ```
 
-O `id` de cada candidato aparece no relatório. Depois de escrever, mova o arquivo para `src/content/noticias/`.
+Sem `SUPABASE_*`, o `radar:semanal` escreve a copy só na prévia local. Rodar duas vezes na mesma semana não duplica: links repetidos são ignorados.
+
+O fluxo antigo continua disponível para escrever à mão: `npm run radar:promover -- <id>` cria um rascunho Markdown em `radar/rascunhos/`.
 
 ## Ajustando o que o radar procura
 
@@ -78,16 +97,17 @@ Pontuação final = soma dos pontos de palavras × peso da fonte + bônus se tiv
 
 ## Agendamento no GitHub Actions
 
-O workflow `.github/workflows/radar-semanal.yml` roda toda segunda às 8h (Brasília) e abre um PR com o relatório. Também dá para rodar manualmente na aba **Actions → Radar semanal de notícias → Run workflow**.
+O workflow `.github/workflows/radar-semanal.yml` roda toda segunda às 8h (Brasília). Também dá para rodar manualmente em **Actions → Radar semanal de notícias → Run workflow**. O relatório e a prévia ficam anexados à execução por 30 dias (seção *Artifacts*).
 
-Configuração necessária no repositório (uma vez, por quem administra):
-**Settings → Actions → General → Workflow permissions**: marcar "Read and write permissions" e "Allow GitHub Actions to create and approve pull requests".
+## Ajustando a copy
+
+O texto de instrução do Claude fica em `scripts/radar/redigir.ts` (constante `SISTEMA`). Quantidade e modelo ficam em `config.ts`: `MAX_PARA_REDACAO`, `MAX_SUGESTOES_SEMANA` e `MODELO_REDACAO`. Se marketing editar sempre o mesmo tipo de coisa (tom, tamanho, um termo), ajuste a instrução em vez de corrigir à mão toda semana.
 
 ## Evoluções possíveis (depois de validar a rotina)
 
-- **Rascunho com IA:** um passo opcional que chama a API do Claude para sugerir categoria, resumo e um primeiro "por que importa" para cada item promovido. A chave vai em *GitHub Secrets*, nunca no código ou no frontend, e o texto gerado continua passando por revisão humana antes de publicar.
-- **Aviso no Slack:** postar o link do PR no canal do marketing quando o radar rodar.
-- **Histórico:** usar os relatórios antigos para ver quais temas aparecem mais ao longo do tempo e alimentar a pauta de artigos.
+- **Aviso no Slack ou e-mail** quando as sugestões da semana chegarem ao painel.
+- **Ler a matéria inteira** antes de escrever (ferramenta de busca do Claude), para resumos mais ricos que o trecho do feed.
+- **Histórico:** usar a tabela `noticias` para ver quais temas aparecem mais e alimentar a pauta de artigos.
 
 ## Limitações conhecidas
 

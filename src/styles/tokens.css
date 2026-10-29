@@ -2,15 +2,15 @@
 @import "tailwindcss";
 
 :root {
-  --citi-black: #0a0a0a;
+  --citi-black: #131b17;
   --citi-white: #ffffff;
   --citi-green: #00db59;
   --citi-green-hover: #1de872;
   --citi-green-deep-1: #001809;
-  --citi-green-deep-2: #000c05;
-  --citi-green-deep-3: #000a01;
-  --citi-surface: #0f1c10;
-  --citi-surface-ghost: #0f2213;
+  --citi-green-deep-2: #0e2016;
+  --citi-green-deep-3: #121e17;
+  --citi-surface: #1a2b20;
+  --citi-surface-ghost: #1d3325;
   --citi-border: rgba(255, 255, 255, .1);
   --citi-border-green: rgba(0, 219, 89, .4);
   --citi-text: #e3e9e5;

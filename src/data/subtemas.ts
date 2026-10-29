@@ -5,9 +5,15 @@ export interface Subtema {
 }
 
 export const subtemas: Subtema[] = [
-  { slug: 'marketing-comercial', parentSlug: 'negocios', label: 'Marketing e comercial' },
+  { slug: 'marketing', parentSlug: 'negocios', label: 'Marketing' },
+  { slug: 'vendas', parentSlug: 'negocios', label: 'Vendas' },
+  { slug: 'dados', parentSlug: 'solucoes', label: 'Dados' },
+  { slug: 'desenvolvimento', parentSlug: 'solucoes', label: 'Desenvolvimento' },
   { slug: 'inovacao', parentSlug: 'solucoes', label: 'Inovação' },
-  { slug: 'financeiro', parentSlug: 'gestao', label: 'Financeiro' },
+  { slug: 'experiencia-do-cliente', parentSlug: 'solucoes', label: 'Experiência do cliente' },
+  { slug: 'gestao-empresarial', parentSlug: 'gestao', label: 'Gestão empresarial' },
+  { slug: 'big-techs', parentSlug: 'gestao', label: 'Big techs' },
+  { slug: 'financas', parentSlug: 'gestao', label: 'Finanças' },
 ]
 
 export function getSubtema(slug: string | undefined) {

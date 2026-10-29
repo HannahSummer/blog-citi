@@ -7,7 +7,11 @@ const postsDirectory = join(root, 'src', 'content', 'posts')
 const validCategories = new Set(['negocios', 'solucoes', 'gestao'])
 const validFunnelStages = new Set(['awareness', 'consideracao', 'intencao'])
 const validCtaTypes = new Set(['diagnostico', 'material-rico', 'newsletter'])
-const validSubthemes: Record<string, string> = { 'marketing-comercial': 'negocios', inovacao: 'solucoes', financeiro: 'gestao' }
+const validSubthemes: Record<string, string> = {
+  marketing: 'negocios', vendas: 'negocios',
+  dados: 'solucoes', desenvolvimento: 'solucoes', inovacao: 'solucoes', 'experiencia-do-cliente': 'solucoes',
+  'gestao-empresarial': 'gestao', 'big-techs': 'gestao', financas: 'gestao',
+}
 type Problem = { file: string; field: string; message: string }
 
 const errors: Problem[] = []

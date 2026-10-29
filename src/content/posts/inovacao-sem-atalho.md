@@ -11,6 +11,7 @@ cta_link: "#"
 author: "CITi"
 palavras_chave: "inovacao, experimentacao, estrategia"
 featured: false
+draft: true
 accent: "lime"
 ---
 

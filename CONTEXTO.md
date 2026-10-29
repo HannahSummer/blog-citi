@@ -14,7 +14,7 @@ As categorias do blog são `negocios`, `solucoes` e `gestao`. Os subtemas são `
 
 ## Diagnóstico
 
-A rota `/blog/diagnostico` apresenta o quiz de autoavaliação sem persistência. A chave `diagnosticoComBanco` em `src/config/site.ts` permanece `false`. O formulário com os cinco campos da Fase 2 está preparado atrás da chave e mantém origem e UTMs.
+A rota `/blog/diagnostico` tem o quiz de 6 perguntas (4 níveis, 0 a 12 pontos) e, depois do resultado, o formulário de contato. Perguntas, níveis, textos e opções ficam só em `src/config/diagnostico.ts`; as regras do formulário, em `src/lib/diagnostico-schema.ts`; o envio, em `src/services/leads.ts`. A chave `diagnosticoComBanco` em `src/config/site.ts` liga sozinha quando o `.env` tem as variáveis do Supabase. Sem elas, `npm run dev` usa o modo demonstração e o build publicado mostra o botão `Falar com o CITi`. Detalhes em `docs/05-DIAGNOSTICO-E-LEADS.md`.
 
 ## Sobre e momentos
 
@@ -29,7 +29,7 @@ Momentos ficam em `src/content/momentos/` e usam `title`, `date`, `tipo`, `resum
 
 ## Roteiro de teste do MVP
 
-- Completar o quiz com pontuação 0, 5 e 12 e conferir cada resultado.
+- Completar o quiz com pontuação 0, 5, 8 e 12 e conferir cada nível.
 - Conferir o botão `Falar com o CITi` e origem/UTMs no link.
 - Abrir uma página de destaque compartilhável quando houver data confirmada.
 - Abrir `/blog/artigos?categoria=solucoes` e conferir subtemas publicados e contagem.

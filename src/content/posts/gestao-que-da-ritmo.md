@@ -9,6 +9,7 @@ cta_tipo: "newsletter"
 author: "CITi"
 palavras_chave: "gestao, processos, produtividade"
 featured: false
+draft: true
 accent: "orange"
 ---
 

@@ -9,6 +9,7 @@ cta_tipo: "diagnostico"
 author: "CITi"
 palavras_chave: "discovery, validacao, produto digital"
 featured: false
+draft: true
 accent: "blue"
 ---
 

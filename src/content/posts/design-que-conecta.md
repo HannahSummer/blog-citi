@@ -7,6 +7,7 @@ categoria: "solucoes"
 etapa_funil: "consideracao"
 cta_tipo: "newsletter"
 featured: false
+draft: true
 accent: "blue"
 author: "CITi"
 palavras_chave: "design de produto, experiencia do usuario, produtos digitais"

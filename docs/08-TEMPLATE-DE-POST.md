@@ -9,7 +9,7 @@ excerpt: "Resumo em uma ou duas frases."
 meta_description: "Descrição para buscadores com 140 a 160 caracteres."
 date: "AAAA-MM-DD"
 categoria: "negocios" # negocios, solucoes ou gestao
-subtema: "" # marketing-comercial, inovacao ou financeiro, conforme a categoria
+subtema: "" # negocios: marketing, vendas | solucoes: dados, desenvolvimento, inovacao, experiencia-do-cliente | gestao: gestao-empresarial, big-techs, financas
 etapa_funil: "awareness" # awareness, consideracao ou intencao
 cta_tipo: "diagnostico" # diagnostico, material-rico ou newsletter
 cover: "/images/covers/exemplo.webp"

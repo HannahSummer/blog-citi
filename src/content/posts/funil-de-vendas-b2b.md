@@ -2,17 +2,17 @@
 title: "Funil de vendas: por que o comercial não acompanha o crescimento"
 excerpt: "A empresa gera mais leads, mas as vendas não andam no mesmo ritmo. Veja onde o funil costuma quebrar antes de culpar a equipe."
 meta_description: "Leads que somem, previsões erradas e contatos sem perfil. Veja os sinais de um funil B2B quebrado e o que mapear antes de escolher qualquer ferramenta."
-date: "2026-11-02"
+date: "2026-10-30"
 categoria: "negocios"
-subtema: "marketing-comercial"
+subtema: "vendas"
 etapa_funil: "consideracao"
 cta_tipo: "diagnostico"
 cta_link: ""
 cover: "/images/covers/funil-de-vendas-b2b.webp"
-cover_alt: "Diagrama de funil de vendas com etapas em tons de verde sobre fundo escuro"
+cover_alt: "Ilustração abstrata de linhas em leque que formam uma espiral, em degradê azul e verde"
 author: "Equipe CITi"
 featured: false
-draft: true
+draft: false
 palavras_chave: "funil de vendas B2B, lead qualificado, passagem entre marketing e vendas"
 ---
 

@@ -45,7 +45,7 @@ Fechamento: o que o leitor deve levar e qual o próximo passo.
 | `meta_description` | sim | ~150 caracteres | Texto que aparece no Google e na prévia do LinkedIn |
 | `date` | sim | `AAAA-MM-DD` | Ordenação e data exibida |
 | `categoria` | sim | `negocios`, `solucoes`, `gestao` | Filtro e posts relacionados |
-| `subtema` | não | `marketing-comercial`, `inovacao`, `financeiro` | Recorte dentro da categoria principal |
+| `subtema` | não | Negócios: `marketing`, `vendas`. Soluções: `dados`, `desenvolvimento`, `inovacao`, `experiencia-do-cliente`. Gestão: `gestao-empresarial`, `big-techs`, `financas` | Recorte dentro da categoria principal |
 | `etapa_funil` | sim | `awareness`, `consideracao`, `intencao` | Define o CTA certo e permite medir o que gera MQL |
 | `cta_tipo` | sim | `newsletter`, `material-rico`, `diagnostico` | Bloco de chamada no fim do post |
 | `cta_link` | só p/ material rico | URL | Link do material |

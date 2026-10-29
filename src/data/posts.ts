@@ -20,6 +20,7 @@ export interface Post {
   ctaType: CtaType
   ctaLink?: string
   cover?: string
+  coverAlt: string
   author: string
   featured: boolean
   accent: Accent
@@ -44,7 +45,7 @@ export const posts: Post[] = Object.entries(markdownFiles).map(([path, raw]) => 
     slug, title: String(metadata.title ?? ''), excerpt: String(metadata.excerpt ?? ''), metaDescription: String(metadata.meta_description ?? metadata.excerpt ?? ''),
     date: String(metadata.date ?? ''), category: getCategory(categorySlug)?.label ?? 'Negócios', categorySlug, subtema: validSubtema, draft,
     funnelStage: String(metadata.etapa_funil ?? 'awareness') as FunnelStage, ctaType: String(metadata.cta_tipo ?? 'newsletter') as CtaType,
-    ctaLink: metadata.cta_link ? String(metadata.cta_link) : undefined, cover: metadata.cover ? String(metadata.cover) : undefined,
+    ctaLink: metadata.cta_link ? String(metadata.cta_link) : undefined, cover: metadata.cover ? String(metadata.cover) : undefined, coverAlt: String(metadata.cover_alt ?? ''),
     author: String(metadata.author ?? 'CITi'), featured: Boolean(metadata.featured), accent: String(metadata.accent ?? 'lime') as Accent,
     content, readTime: String(metadata.readTime ?? readTime(content)),
   }

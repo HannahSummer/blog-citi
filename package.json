@@ -11,13 +11,16 @@
     "typecheck": "tsc --noEmit",
     "radar": "tsx scripts/radar/index.ts",
     "radar:promover": "tsx scripts/radar/promover.ts",
+    "radar:semanal": "tsx scripts/radar/semanal.ts",
     "radar:tipos": "tsc -p scripts/radar/tsconfig.json",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "capas": "tsx scripts/capas/gerar.ts"
   },
   "dependencies": {
     "@fontsource/inter-tight": "^5.3.0",
     "@supabase/supabase-js": "^2.75.0",
     "@tailwindcss/vite": "^4.1.13",
+    "d3-geo": "^3.1.1",
     "lucide-react": "^0.468.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -25,15 +28,21 @@
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.9.3",
     "rss-parser": "^3.13.0",
-    "tailwindcss": "^4.1.13"
+    "tailwindcss": "^4.1.13",
+    "topojson-client": "^3.1.0",
+    "world-atlas": "^2.0.2"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^1.3.0",
+    "@types/d3-geo": "^3.1.1",
     "@types/node": "^26.6.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@types/topojson-client": "^3.1.5",
     "@vitejs/plugin-react": "^5.0.4",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
-    "vite": "^7.1.7"
+    "vite": "^7.1.7",
+    "zod": "^4.6.7"
   }
 }

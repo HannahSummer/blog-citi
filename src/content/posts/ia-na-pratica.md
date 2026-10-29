@@ -8,6 +8,7 @@ subtema: "inovacao"
 etapa_funil: "awareness"
 cta_tipo: "newsletter"
 featured: false
+draft: true
 accent: "orange"
 author: "CITi"
 palavras_chave: "inteligencia artificial, inovacao, tecnologia responsavel"

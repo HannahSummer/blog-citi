@@ -2,17 +2,17 @@
 title: "Comprar, adaptar ou construir software: como decidir"
 excerpt: "Antes de escolher uma ferramenta, entenda qual problema ela precisa resolver e quanto custa não resolvê-lo."
 meta_description: "Guia prático para decidir entre comprar, adaptar ou desenvolver software sob medida, com critérios de custo, controle de dados, prazo e diferencial."
-date: "2026-11-02"
+date: "2026-10-30"
 categoria: "solucoes"
-subtema: ""
+subtema: "desenvolvimento"
 etapa_funil: "consideracao"
 cta_tipo: "diagnostico"
 cta_link: ""
 cover: "/images/covers/comprar-adaptar-ou-construir-software.webp"
-cover_alt: "Três caminhos representados por linhas que se separam sobre fundo escuro, em tons de verde"
+cover_alt: "Ilustração abstrata de faixas com hachuras diagonais, em degradê azul e verde"
 author: "Equipe CITi"
 featured: false
-draft: true
+draft: false
 palavras_chave: "software sob medida ou pronto, comprar ou desenvolver software, custo de software para empresa"
 ---
 

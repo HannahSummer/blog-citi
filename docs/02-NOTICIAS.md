@@ -6,13 +6,14 @@ O "Radar da semana" é curadoria, não agregação. O valor está no **olhar do 
 
 ## Onde ficam
 
-| Pasta | O que é | Aparece no site? |
+| Lugar | O que é | Aparece no site? |
 |---|---|---|
-| `radar/relatorios/` | Relatórios semanais com candidatos (gerados pelo radar) | Não |
-| `radar/rascunhos/` | Notícias escolhidas, em redação | Não |
-| `src/content/noticias/` | Notícias prontas | **Sim** |
+| Painel `/blog/admin/noticias` → **Para revisar** | Sugestões da semana, com a copy escrita pelo Claude | Não |
+| Painel → **Publicadas** | Notícias aprovadas (tabela `noticias` no Supabase) | **Sim**, na hora |
+| Painel → **Rejeitadas** | Sugestões descartadas | Não |
+| `src/content/noticias/` | Notícias escritas à mão em Markdown (formato antigo, continua valendo) | **Sim** |
 
-Uma notícia só vai ao ar quando o arquivo é movido para `src/content/noticias/`.
+O site mostra as duas origens juntas, da mais recente para a mais antiga.
 
 ## Modelo do arquivo
 
@@ -24,6 +25,10 @@ categoria: "inovacao"
 fonte: "Canaltech"
 link: "https://endereco-da-materia-original"
 resumo: "Pesquisa divulgada no AWS Summit indica que a adoção de IA chegou a metade das empresas, mas só uma pequena parte usa a tecnologia em nível avançado."
+continente: "america-do-sul"
+local: "São Paulo, Brasil"
+lat: -23.55
+lng: -46.63
 ---
 
 Por que isso importa: o dado mostra que o gargalo deixou de ser acesso à ferramenta e passou a ser saber
@@ -35,6 +40,11 @@ de negócio ela precisa mover e como isso será medido.
 - Corpo do arquivo: o bloco "Por que isso importa", com 1 parágrafo curto.
 - `categoria`: as mesmas 5 do blog.
 - `link`: sempre o endereço final da matéria (se veio do Google Notícias, abra e copie o link real).
+- `continente` (opcional): coloca a notícia no globo do topo da página. Valores: `america-do-sul`,
+  `america-do-norte`, `europa`, `africa`, `asia`, `oceania`. Sem ele, a notícia aparece só na lista.
+- `local`, `lat` e `lng` (opcionais): cidade mostrada no card do globo e posição exata do pino. Sem
+  coordenadas, o pino fica perto do centro do continente. No painel, o continente é escolhido no campo
+  "Continente" (o radar já sugere um).
 
 ## Regras editoriais e de direito autoral
 
@@ -45,19 +55,35 @@ de negócio ela precisa mover e como isso será medido.
 5. **Fuja de**: política partidária, fofoca, notícia de tecnologia de consumo sem impacto em empresa, press release disfarçado de notícia.
 6. **Critério de escolha**: a notícia precisa revelar um problema, uma mudança ou uma oportunidade para empresas do nosso ICP. Se não der para escrever o "por que importa" em 3 frases, não é para o radar.
 
-## Rotina semanal (30 a 45 minutos)
+## Rotina semanal (10 a 20 minutos)
 
-| Passo | Tempo | Como |
-|---|---|---|
-| 1. Abrir o PR "Radar da semana" | automático | Aba Pull Requests do GitHub (toda segunda de manhã) |
-| 2. Triagem | 10 min | Ler os títulos, abrir os 8 a 10 mais promissores |
-| 3. Escolha | 5 min | Ficar com 3 a 5, variando categoria |
-| 4. Gerar rascunhos | 1 min | `npm run radar:promover -- <id> <id> ...` |
-| 5. Redação | 15–25 min | Preencher `resumo` e "por que importa" em cada rascunho |
-| 6. Publicar | 5 min | Mover os arquivos para `src/content/noticias/`, commit e PR |
-| 7. Fechar o PR do radar | 1 min | Pode fazer merge (guarda o histórico) ou fechar |
+Toda segunda às 8h a automação coleta as notícias da semana, escolhe até 6 e entrega a copy pronta no painel. A pessoa de marketing só revisa e aprova.
 
-Se numa semana não houver nada bom, publique menos. **Três notícias boas valem mais que cinco medianas.** O radar desatualizado passa impressão pior do que uma semana com menos itens, então se for pular a semana, avise o time.
+| Passo | Como |
+|---|---|
+| 1. Entrar no painel | `/blog/admin/noticias` (o link não aparece no menu), com a conta de editor |
+| 2. Ler cada card | À esquerda, os campos editáveis; à direita, **como fica no site**, atualizando enquanto você edita |
+| 3. Conferir a fonte | **Abrir matéria** e **Ver título e trecho originais**: confirme que o resumo é fiel e não repete frases da fonte |
+| 4. Ajustar | Título, resumo, "por que importa", categoria, subtema e link |
+| 5. Link do Google Notícias | Se aparecer o aviso amarelo, abra a matéria e cole o endereço final |
+| 6. Decidir | **Aprovar e publicar** (vai ao ar na hora) ou **Rejeitar** |
+
+Uma notícia publicada pode ser corrigida na aba **Publicadas** ou tirada do ar com **Tirar do ar**, que a devolve para revisão.
+
+Se numa semana não houver nada bom, rejeite tudo. **Três notícias boas valem mais que cinco medianas.**
+
+### Quem pode aprovar
+
+Só contas cadastradas como editoras. Para incluir alguém (uma vez, por quem administra o Supabase):
+
+1. **Authentication → Users → Add user**: e-mail e senha da pessoa, marcando *Auto Confirm User*.
+2. **SQL Editor**:
+   ```sql
+   insert into public.editores (user_id, email)
+   select id, email from auth.users where email = 'pessoa@citi.org.br';
+   ```
+
+Para remover o acesso: `delete from public.editores where email = 'pessoa@citi.org.br';`.
 
 ## Métricas da seção
 

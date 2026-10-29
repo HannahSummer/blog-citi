@@ -2,17 +2,17 @@
 title: "Custo de software para empresa: o que entra além da licença"
 excerpt: "O preço de compra é a menor parte do custo de um software. Veja o que pesa na conta de verdade ao longo dos anos."
 meta_description: "Quanto custa um software para a empresa além da mensalidade? Veja os itens do custo total, um exemplo de três anos e o que pedir aos fornecedores."
-date: "2026-11-02"
+date: "2026-10-30"
 categoria: "gestao"
-subtema: "financeiro"
+subtema: "financas"
 etapa_funil: "consideracao"
 cta_tipo: "diagnostico"
 cta_link: ""
 cover: "/images/covers/custo-de-software-para-empresa.webp"
-cover_alt: "Calculadora e gráfico de barras em tons de verde sobre fundo escuro"
+cover_alt: "Ilustração abstrata de colunas que sobem em degraus, em degradê azul e verde"
 author: "Equipe CITi"
 featured: false
-draft: true
+draft: false
 palavras_chave: "custo de software para empresa, custo total de propriedade, quanto custa software sob medida"
 ---
 

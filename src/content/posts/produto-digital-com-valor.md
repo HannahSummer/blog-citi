@@ -6,7 +6,8 @@ date: "2024-09-18"
 categoria: "negocios"
 etapa_funil: "intencao"
 cta_tipo: "diagnostico"
-featured: true
+featured: false
+draft: true
 accent: "lime"
 author: "CITi"
 palavras_chave: "produto digital, estrategia, problemas de negocio"

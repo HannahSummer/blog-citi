@@ -7,9 +7,9 @@ const root = process.cwd()
 const postsDirectory = join(root, 'src', 'content', 'posts')
 const categories = ['negocios', 'solucoes', 'gestao'] as const
 const subthemes: Record<(typeof categories)[number], string[]> = {
-  negocios: ['marketing-comercial'],
-  solucoes: ['inovacao'],
-  gestao: ['financeiro'],
+  negocios: ['marketing', 'vendas'],
+  solucoes: ['dados', 'desenvolvimento', 'inovacao', 'experiencia-do-cliente'],
+  gestao: ['gestao-empresarial', 'big-techs', 'financas'],
 }
 const funnelStages = ['awareness', 'consideracao', 'intencao'] as const
 

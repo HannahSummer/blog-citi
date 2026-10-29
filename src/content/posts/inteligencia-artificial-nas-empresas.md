@@ -2,17 +2,17 @@
 title: "Inteligência artificial nas empresas: qual problema ela resolve?"
 excerpt: "Adotar uma ferramenta de IA não é o mesmo que resolver um problema. Veja como mudar a pergunta antes de comprar."
 meta_description: "Cada vez mais empresas usam IA, mas nem sempre sabem qual problema ela deve resolver. Veja três perguntas para fazer antes de escolher uma ferramenta."
-date: "2026-11-02"
+date: "2026-10-30"
 categoria: "solucoes"
 subtema: "inovacao"
 etapa_funil: "awareness"
 cta_tipo: "diagnostico"
 cta_link: ""
 cover: "/images/covers/inteligencia-artificial-nas-empresas.webp"
-cover_alt: "Painel de análise de dados em tons de verde sobre fundo escuro"
+cover_alt: "Ilustração abstrata de arcos concêntricos, em degradê azul e verde"
 author: "Equipe CITi"
 featured: false
-draft: true
+draft: false
 palavras_chave: "inteligência artificial nas empresas, adoção de IA, IA com resultado"
 ---
 

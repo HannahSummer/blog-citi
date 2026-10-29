@@ -2,17 +2,17 @@
 title: "Retrabalho nos processos: como medir o custo antes de automatizar"
 excerpt: "A equipe refaz tarefas todo mês e nunca calculou quanto isso custa. Antes de automatizar, meça."
 meta_description: "Veja sinais de retrabalho nos processos, como calcular o custo de tarefas manuais e o que mapear antes de automatizar a rotina da sua empresa."
-date: "2026-11-02"
+date: "2026-10-30"
 categoria: "gestao"
-subtema: ""
+subtema: "gestao-empresarial"
 etapa_funil: "awareness"
 cta_tipo: "diagnostico"
 cta_link: ""
 cover: "/images/covers/retrabalho-em-processos.webp"
-cover_alt: "Fluxo de tarefas com setas circulares em tons de verde sobre fundo escuro"
+cover_alt: "Ilustração abstrata de faixas curvas e paralelas, em degradê azul e verde"
 author: "Equipe CITi"
 featured: false
-draft: true
+draft: false
 palavras_chave: "retrabalho em processos, mapeamento de processos, automação de tarefas manuais"
 ---
 

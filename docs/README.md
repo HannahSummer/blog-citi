@@ -7,10 +7,10 @@
 | Documento | Para quem | O que responde |
 |---|---|---|
 | [01 — Guia de conteúdo](01-GUIA-DE-CONTEUDO.md) | Quem escreve e publica | Onde ficam os posts, como criar um, checklist de publicação |
-| [02 — Notícias](02-NOTICIAS.md) | Curadoria | Estrutura das notícias, regras editoriais e de direito autoral, rotina semanal |
-| [03 — Radar automático](03-RADAR-AUTOMATICO.md) | Curadoria + dev | Como o script busca notícias, como rodar, configurar e agendar |
+| [02 — Notícias](02-NOTICIAS.md) | Curadoria | Estrutura das notícias, regras editoriais, painel de aprovação e rotina semanal |
+| [03 — Radar automático](03-RADAR-AUTOMATICO.md) | Curadoria + dev | Fontes mapeadas por tema, copy com o Claude, configuração e agendamento |
 | [04 — Estratégia editorial](04-ESTRATEGIA-EDITORIAL.md) | Marketing, Gerente, CRO | Mapa de conteúdo, temas prioritários, primeiras pautas, como pesquisar |
-| [05 — Diagnóstico e leads](05-DIAGNOSTICO-E-LEADS.md) | Comercial + dev | Configuração do Supabase, testes, LGPD e pendências de produção |
+| [05 — Diagnóstico e leads](05-DIAGNOSTICO-E-LEADS.md) | Comercial + dev | Como o diagnóstico funciona, configuração do Supabase, onde ver e responder leads, newsletter, como mudar perguntas e pendências de produção |
 
 ## Como o blog funciona (visão geral)
 

@@ -2,6 +2,7 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { getCategory } from '../data/categorias'
+import { getSubtema } from '../data/subtemas'
 import type { Post } from '../data/posts'
 import { formatarData } from '../lib/datas'
 
@@ -14,20 +15,45 @@ function CategoryPlaceholder({ category }: { category: string }) {
   </svg>
 }
 
-function PostCover({ post }: { post: Post }) {
-  const category = getCategory(post.categorySlug)
-  const [fallback, setFallback] = useState(!post.cover && !category?.capaPadrao)
-  const source = post.cover ?? category?.capaPadrao
-  if (fallback || !source) return <div className="post-card-cover"><CategoryPlaceholder category={post.categorySlug} /></div>
-  return <div className="post-card-cover"><img src={source} alt={post.cover ? post.title : ''} onError={() => setFallback(true)} /></div>
+// Capa do artigo (gerada por `npm run capas` ou feita à mão), com a da categoria e o desenho como reserva.
+export function capaDoPost(post: Post) {
+  return post.cover ?? getCategory(post.categorySlug)?.capaPadrao
 }
 
-export function PostCard({ post, position = 1 }: { post: Post; position?: number }) {
-  return <Link className={`post-card post-card--${post.accent}`} to={`/blog/artigos/${post.slug}`}>
-    <PostCover post={post} /><div className="post-card-body"><div className="post-card-meta"><span><b>{String(position).padStart(2, '0')}</b>{post.category}</span><ArrowRight className="post-card-arrow" size={18} /></div><h3>{post.title}</h3><p>{post.excerpt}</p><span className="post-card-footer">{formatarData(post.date).toUpperCase()} <i>·</i> {post.readTime.toUpperCase()}</span></div>
+function PostCover({ post, className = 'post-card-cover' }: { post: Post; className?: string }) {
+  const source = capaDoPost(post)
+  const [fallback, setFallback] = useState(!source)
+  if (fallback || !source) return <div className={className}><CategoryPlaceholder category={post.categorySlug} /></div>
+  return <div className={className}><img src={source} alt={post.cover ? post.coverAlt : ''} loading="lazy" onError={() => setFallback(true)} /></div>
+}
+
+// "Soluções · Dados" quando há subtema.
+export function rotuloDoPost(post: Post) {
+  const subtema = getSubtema(post.subtema)?.label
+  return subtema ? `${post.category} · ${subtema}` : post.category
+}
+
+// `compacto`: capa discreta (faixa fina) e sem resumo, para fileiras horizontais como a da Home.
+export function PostCard({ post, position = 1, compacto = false }: { post: Post; position?: number; compacto?: boolean }) {
+  return <Link className={`post-card post-card--${post.accent}${compacto ? ' post-card--compacto' : ''}`} to={`/blog/artigos/${post.slug}`}>
+    <PostCover post={post} /><div className="post-card-body"><div className="post-card-meta"><span><b>{String(position).padStart(2, '0')}</b>{rotuloDoPost(post)}</span><ArrowRight className="post-card-arrow" size={18} /></div><h3>{post.title}</h3>{!compacto && <p>{post.excerpt}</p>}<span className="post-card-footer">{formatarData(post.date).toUpperCase()} <i>·</i> {post.readTime.toUpperCase()}</span></div>
   </Link>
 }
 
 export function FeaturedPost({ post }: { post: Post }) {
-  return <Link className="featured-post" to={`/blog/artigos/${post.slug}`}><div className={`featured-media featured-media--${post.accent}`}><span>EM DESTAQUE</span></div><div className="featured-copy"><div className="post-meta">{formatarData(post.date)} <i>•</i> {post.category} <i>•</i> {post.readTime}</div><h3>{post.title}</h3><p>{post.excerpt}</p><span className="button-primary">Ler artigo <ArrowUpRight size={17} /></span></div></Link>
+  return <Link className="featured-post" to={`/blog/artigos/${post.slug}`}><div className={`featured-media featured-media--${post.accent}`}><PostCover post={post} className="featured-media-capa" /><span>EM DESTAQUE</span></div><div className="featured-copy"><div className="post-meta">{formatarData(post.date)} <i>•</i> {rotuloDoPost(post)} <i>•</i> {post.readTime}</div><h3>{post.title}</h3><p>{post.excerpt}</p><span className="button-primary">Ler artigo <ArrowUpRight size={17} /></span></div></Link>
+}
+
+// Destaque da página do Blog: capa grande ao lado do texto, no padrão do destaque de Notícias.
+export function PostDestaque({ post }: { post: Post }) {
+  return <Link className="artigo-destaque" to={`/blog/artigos/${post.slug}`}>
+    <PostCover post={post} className="artigo-destaque-capa" />
+    <div className="artigo-destaque-texto">
+      <span className="news-card-flag">Em destaque</span>
+      <span className="artigo-destaque-meta">{rotuloDoPost(post)} <i>·</i> {post.readTime}</span>
+      <h2>{post.title}</h2>
+      <p>{post.excerpt}</p>
+      <span className="button-primary">Ler artigo <ArrowUpRight size={17} /></span>
+    </div>
+  </Link>
 }

@@ -1,20 +1,47 @@
-import { ArrowUpRight, Users } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Trophy } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { sobreConfig } from '../../config/sobre'
-import { getDestaque } from '../../data/momentos'
+import { getDestaque, getFotosIntercaladas } from '../../data/momentos'
 
-function SobreImage({ src, alt, fallback, width, height }: { src: string; alt: string; fallback: string; width: number; height: number }) {
-  return <div className="sobre-home-image"><img src={src} alt={alt} width={width} height={height} loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none' }} /><span>{fallback}</span></div>
+function Faixa({ fotos, reversa = false }: { fotos: ReturnType<typeof getFotosIntercaladas>; reversa?: boolean }) {
+  return <div className={reversa ? 'sobre-home-faixa sobre-home-faixa--reversa' : 'sobre-home-faixa'}>
+    <div className="sobre-home-faixa-trilho">{[0, 1].map((copia) => <span key={copia} aria-hidden={copia === 1 || undefined}>{fotos.map((foto, i) => <Link to={`/blog/sobre/${foto.slug}`} tabIndex={copia === 1 ? -1 : undefined} key={`${foto.src}-${i}`}><img src={foto.src} alt={copia === 1 ? '' : foto.titulo} loading="lazy" /></Link>)}</span>)}</div>
+  </div>
 }
 
 export function SobreHome() {
   const content = sobreConfig.home
-  const highlight = getDestaque()
-  const target = highlight && !highlight.draft ? `/blog/sobre/${highlight.slug}` : '/blog/sobre'
-  return <section className="sobre-home" id="sobre"><div className="sobre-home-orb" aria-hidden="true" /><div className="container sobre-home-inner"><span className="eyebrow">{content.eyebrow}</span><h2>{content.titlePrefix} <strong>{content.titleEmphasis}</strong></h2><p className="sobre-home-intro">{content.description}</p><article className="sobre-home-feature"><figure><div className="sobre-home-photo-glow" aria-hidden="true" /><div className="sobre-home-photo"><SobreImage src={content.image} alt={content.imageAlt} fallback={content.imageFallback} width={1600} height={1000} /><div className="sobre-home-photo-caption"><span className="eyebrow">{content.highlightEyebrow}</span><p>{content.highlightsTitle}</p></div></div></figure><div className="sobre-home-feature-copy"><span className="sobre-home-feature-label"><i />{content.highlightEyebrow}</span><h3>{content.highlightTitle}</h3><p>{content.highlightText}</p><div className="sobre-home-metric"><span><Users size={20} /></span><p><strong>{content.highlightMetric}</strong> {content.highlightMetricText}</p></div><Link className="sobre-home-conquest" to={target}>{content.highlight.linkLabel} <ArrowUpRight size={17} /></Link></div></article><ol className="sobre-home-journey-list">{content.journey.map((step, index) => <li key={step}><span>{String(index + 1).padStart(2, '0')}</span><strong>{step}</strong></li>)}</ol><Link className="sobre-home-link" to="/blog/sobre/quem-somos">{content.aboutLinkLabel} <ArrowRightIcon /></Link></div></section>
-}
+  const destaque = getDestaque()
+  // Fotos intercaladas divididas em duas metades, uma para cada faixa (sentidos opostos).
+  const fotos = getFotosIntercaladas()
+  const metade = Math.ceil(fotos.length / 2)
+  return <section className="sobre-home" id="sobre">
+    <div className="sobre-home-luz" aria-hidden="true" />
+    <div className="container sobre-home-topo">
+      <div>
+        <span className="eyebrow">{content.eyebrow}</span>
+        <h2>{content.titlePrefix} <strong>{content.titleEmphasis}</strong></h2>
+        <p className="sobre-home-intro">{content.description}</p>
+        <Link className="button-primary" to="/blog/sobre/quem-somos">{content.aboutLinkLabel} <ArrowRight size={17} /></Link>
+      </div>
+      <dl className="sobre-home-numeros">{content.stats.map((item) => <div key={item.label}><dd>{item.value}</dd><dt>{item.label}</dt></div>)}</dl>
+    </div>
 
-function ArrowRightIcon() { return <span aria-hidden="true">→</span> }
+    {fotos.length > 0 && <div className="sobre-home-faixas">
+      <Faixa fotos={fotos.slice(0, metade)} />
+      <Faixa fotos={fotos.slice(metade)} reversa />
+    </div>}
+
+    <div className="container sobre-home-base">
+      {destaque && <Link className="sobre-home-conquista" to={`/blog/sobre/${destaque.slug}`}>
+        <span className="sobre-home-conquista-icone" aria-hidden="true"><Trophy size={20} /></span>
+        <span><small>{content.highlightEyebrow}</small><strong>{destaque.title}</strong></span>
+        <ArrowUpRight size={18} aria-hidden="true" />
+      </Link>}
+      <Link className="text-link" to="/blog/sobre">{content.highlightsTitle} <ArrowRight size={15} /></Link>
+    </div>
+  </section>
+}
 
 export function SobreImageCard({ src, alt, fallback }: { src: string; alt: string; fallback: string }) {
   return <div className="sobre-image"><img src={src} alt={alt} width={1200} height={800} loading="lazy" onError={(event) => { event.currentTarget.style.display = 'none' }} /><span>{fallback}</span></div>

@@ -1,12 +1,13 @@
 import { Search, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { news } from '../data/noticias'
+import { useNoticias } from '../hooks/useNoticias'
 import { posts } from '../data/posts'
 
 export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [query, setQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const news = useNoticias()
   useEffect(() => { if (open) { setQuery(''); inputRef.current?.focus() } }, [open])
   if (!open) return null
   const normalized = query.toLowerCase().trim()
