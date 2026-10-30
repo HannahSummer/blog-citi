@@ -584,3 +584,20 @@ a.news-card-link:hover svg, a.news-card-link:focus-visible svg { transform: tran
 .sobre-home { background: linear-gradient(to bottom, #0f1713 65%, var(--paper)); }
 .sobre-home-luz { -webkit-mask-image: linear-gradient(#000 60%, transparent); mask-image: linear-gradient(#000 60%, transparent); }
 .sobre-home + .newsletter { margin-top: 24px; }
+
+/* Painel interno: abas Notícias / Leads e página de leads */
+.admin-nav { display: flex; gap: 6px; margin: -12px 0 28px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.admin-nav a { padding: 8px 14px; border-radius: 10px; color: var(--muted); font-size: 14px; }
+.admin-nav a:hover { color: var(--ink); }
+.admin-nav a.active { color: var(--lime); background: rgba(0,219,89,.08); font-weight: 600; }
+.admin-tabs button b { margin-left: 4px; font-weight: 700; opacity: .7; }
+.admin-leads-topo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
+.admin-leads-exportar { display: flex; flex-wrap: wrap; gap: 8px; }
+.admin-leads-exportar button:disabled { opacity: .5; cursor: not-allowed; }
+.admin-lead { gap: 14px; }
+.admin-lead-corpo { display: grid; grid-template-columns: minmax(0, 1fr) 200px; align-items: start; gap: 20px; }
+.admin-lead h2 { margin: 0 0 4px; font-size: 24px; font-weight: 500; }
+.admin-lead .admin-muted { margin: 0; }
+.admin-lead-contato { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 12px; font-size: 14px; }
+.admin-lead-contato a { display: inline-flex; align-items: center; gap: 6px; color: var(--lime); }
+@media (max-width: 600px) { .admin-lead-corpo { grid-template-columns: 1fr; } }

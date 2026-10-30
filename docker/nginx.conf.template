@@ -1,0 +1,27 @@
+# Endereço temporário do Coolify (*.sslip.io): avisa o Google para não indexar e não duplicar
+# o conteúdo quando o domínio definitivo estiver no ar. No domínio do CITi, o cabeçalho não é enviado.
+map $host $robots_temporario {
+  ~*\.sslip\.io$  "noindex, nofollow";
+  default         "";
+}
+
+server {
+  listen ${PORT};
+  root /usr/share/nginx/html;
+  gzip on;
+  gzip_types text/css application/javascript application/json image/svg+xml;
+  add_header X-Robots-Tag $robots_temporario always;
+
+  # JS e CSS do build têm hash no nome: podem ficar em cache por um ano.
+  location ~* ^/assets/.+\.(js|css)$ {
+    expires 1y;
+    add_header Cache-Control "public, immutable";
+    add_header X-Robots-Tag $robots_temporario always;
+    try_files $uri =404;
+  }
+
+  # Rotas do React Router (/blog/artigos/..., /blog/sobre/...) abrem o index.html.
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+}

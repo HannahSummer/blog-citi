@@ -4,12 +4,12 @@ import { BookOpen } from 'lucide-react'
 import { categories, getCategory } from '../data/categorias'
 import { getSubtema, subtemas } from '../data/subtemas'
 import { posts } from '../data/posts'
-import { PostCard, PostDestaque } from '../components/PostCard'
-import { NewsletterBlock } from '../components/NewsletterBlock'
-import { SEO } from '../components/SEO'
+import { PostCard, PostDestaque } from '../components/blog/PostCard'
+import { NewsletterBlock } from '../components/newsletter/NewsletterBlock'
+import { SEO } from '../components/layout/SEO'
 
 // O fundo animado só carrega nesta página.
-const FundoFitas = lazy(() => import('../components/FundoFitas'))
+const FundoFitas = lazy(() => import('../components/efeitos/FundoFitas'))
 
 const minutos = (texto: string) => Number.parseInt(texto, 10) || 0
 

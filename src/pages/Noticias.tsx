@@ -2,16 +2,16 @@ import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { useLocation, useSearchParams } from 'react-router-dom'
 import { Radar } from 'lucide-react'
 import { useNoticias } from '../hooks/useNoticias'
-import { NewsletterBlock } from '../components/NewsletterBlock'
-import { NoticiaCard } from '../components/NoticiaCard'
-import { SEO } from '../components/SEO'
-import LuzAmbiente from '../components/LuzAmbiente'
+import { NewsletterBlock } from '../components/newsletter/NewsletterBlock'
+import { NoticiaCard } from '../components/noticias/NoticiaCard'
+import { SEO } from '../components/layout/SEO'
+import LuzAmbiente from '../components/efeitos/LuzAmbiente'
 import { categories } from '../data/categorias'
 import type { NewsItem } from '../data/noticias'
 import { formatarData } from '../lib/datas'
 
 // O globo (d3 + mapa) só carrega nesta página.
-const GloboNoticias = lazy(() => import('../components/GloboNoticias'))
+const GloboNoticias = lazy(() => import('../components/noticias/GloboNoticias'))
 
 const DIA = 86_400_000
 

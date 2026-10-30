@@ -5,3 +5,9 @@ dist
 !.env.example
 radar/relatorios/
 radar/sugestoes/
+
+# Testes de navegador (capturas e rastreamentos)
+test-results/
+playwright-report/
+blob-report/
+api/coverage/

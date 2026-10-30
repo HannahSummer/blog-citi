@@ -9,7 +9,7 @@ Feeds RSS ──► coleta ──► filtro (janela de 7 dias, termos bloqueados
          ──► pontuação por palavras-chave e peso da fonte ──► remoção de duplicadas
          ──► Claude escreve título, resumo e "por que importa" dos 12 melhores
              e descarta os que não servem ao ICP (até 6 seguem)
-         ──► tabela `noticias` no Supabase, como "pendente"
+         ──► API do blog (POST /api/radar/noticias) grava como "pendente"
          ──► marketing revisa e aprova no painel /blog/admin/noticias
 ```
 
@@ -21,19 +21,18 @@ Raspar o HTML dos portais quebra toda vez que o site muda o layout, muitas vezes
 
 ## Configuração (uma vez)
 
-Depois que o Supabase de produção existir (docs/05-DIAGNOSTICO-E-LEADS.md):
+Depois que a API estiver no ar (docs/12-BACKEND-E-DEPLOY.md):
 
-1. Rode a migração `supabase/migrations/20261028120000_noticias_curadoria.sql` no SQL Editor (depois das duas do diagnóstico).
-2. Cadastre as pessoas editoras (docs/02-NOTICIAS.md → Quem pode aprovar).
-3. No GitHub, em **Settings → Secrets and variables → Actions**, crie:
+1. Cadastre as pessoas editoras (docs/02-NOTICIAS.md → Quem pode aprovar).
+2. No GitHub, em **Settings → Secrets and variables → Actions**, crie:
 
 | Secret | Onde pegar |
 |---|---|
 | `ANTHROPIC_API_KEY` | console.anthropic.com → API Keys (conta do CITi) |
-| `SUPABASE_URL` | Supabase → Project Settings → API → Project URL |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → Project Settings → API → `service_role` |
+| `API_URL` | Endereço público da API no Coolify, sem `/api` no fim (ex.: `https://api.blog.citi.org.br`) |
+| `RADAR_TOKEN` | O mesmo valor da variável `RADAR_TOKEN` do serviço da API no Coolify |
 
-A `service_role` ignora as regras de segurança do banco. Ela só pode existir nos Secrets do GitHub e no terminal de quem roda o radar; **nunca** no `.env` do site nem com prefixo `VITE_`.
+O `RADAR_TOKEN` só permite enviar sugestões, que entram como pendentes. Mesmo assim, ele só pode existir nos Secrets do GitHub, no Coolify e no terminal de quem roda o radar; **nunca** no `.env` do site nem com prefixo `VITE_`. Se vazar, gere outro e troque nos dois lugares.
 
 **Custo:** até 12 chamadas ao Claude por semana, cada uma com algumas centenas de palavras. Fica na casa de centavos de dólar por semana.
 
@@ -69,13 +68,13 @@ npm run radar
 
 # Fluxo completo (copy + envio ao painel)
 export ANTHROPIC_API_KEY=...            # PowerShell: $env:ANTHROPIC_API_KEY="..."
-export SUPABASE_URL=...
-export SUPABASE_SERVICE_ROLE_KEY=...
+export API_URL=http://localhost:3000   # ou o endereço da API em produção
+export RADAR_TOKEN=...                  # local: o valor que está no docker-compose.yml
 npm run radar:semanal
 # → radar/sugestoes/semana-AAAA-MM-DD.md (prévia da copy) e sugestões no painel
 ```
 
-Sem `SUPABASE_*`, o `radar:semanal` escreve a copy só na prévia local. Rodar duas vezes na mesma semana não duplica: links repetidos são ignorados.
+Sem `API_URL` e `RADAR_TOKEN`, o `radar:semanal` escreve a copy só na prévia local. Rodar duas vezes na mesma semana não duplica: links repetidos são ignorados.
 
 O fluxo antigo continua disponível para escrever à mão: `npm run radar:promover -- <id>` cria um rascunho Markdown em `radar/rascunhos/`.
 
