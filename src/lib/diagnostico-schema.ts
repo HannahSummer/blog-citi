@@ -1,5 +1,5 @@
-// Regras do formulário de diagnóstico. Espelham os `check` da tabela `diagnosticos`
-// (supabase/migrations). Se mudar uma regra aqui, mude também no banco.
+// Regras do formulário de diagnóstico, usadas pelo site e pela API (api/). Espelham os CHECK
+// da tabela `diagnosticos` (api/prisma/migrations). Se mudar uma regra aqui, mude também no banco.
 import { comoConheceuOpcoes, diagnosticoPerguntas, type Respostas } from '../config/diagnostico'
 
 export const limites = {

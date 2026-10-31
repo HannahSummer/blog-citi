@@ -2,9 +2,9 @@ import { ArrowLeft, ArrowUpRight } from 'lucide-react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import { getPostBySlug, getRelatedPosts } from '../data/posts'
-import { NewsletterBlock } from '../components/NewsletterBlock'
-import { capaDoPost, PostCard, rotuloDoPost } from '../components/PostCard'
-import { SEO } from '../components/SEO'
+import { NewsletterBlock } from '../components/newsletter/NewsletterBlock'
+import { capaDoPost, PostCard, rotuloDoPost } from '../components/blog/PostCard'
+import { SEO } from '../components/layout/SEO'
 import { formatarData } from '../lib/datas'
 
 export function Artigo() {

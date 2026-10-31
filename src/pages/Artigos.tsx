@@ -4,17 +4,19 @@ import { BookOpen } from 'lucide-react'
 import { categories, getCategory } from '../data/categorias'
 import { getSubtema, subtemas } from '../data/subtemas'
 import { posts } from '../data/posts'
-import { PostCard, PostDestaque } from '../components/PostCard'
-import { NewsletterBlock } from '../components/NewsletterBlock'
-import { SEO } from '../components/SEO'
+import { PostCard, PostDestaque } from '../components/blog/PostCard'
+import { NewsletterBlock } from '../components/newsletter/NewsletterBlock'
+import { SEO } from '../components/layout/SEO'
+import { useBarraFixa } from '../hooks/useBarraFixa'
 
 // O fundo animado só carrega nesta página.
-const FundoFitas = lazy(() => import('../components/FundoFitas'))
+const FundoFitas = lazy(() => import('../components/efeitos/FundoFitas'))
 
 const minutos = (texto: string) => Number.parseInt(texto, 10) || 0
 
 export function Artigos() {
   const [params, setParams] = useSearchParams()
+  const { refMarcador, refBarra, fixada } = useBarraFixa()
   const categoria = getCategory(params.get('categoria') ?? undefined)
   const subtema = getSubtema(params.get('subtema') ?? undefined)
   const subtemaAtivo = subtema && subtema.parentSlug === categoria?.slug ? subtema : undefined
@@ -51,7 +53,8 @@ export function Artigos() {
 
     <section className="news-layout container">
       <div className="news-main">
-        <div className="news-filters blog-filters" role="group" aria-label="Filtrar por categoria">
+        <div ref={refMarcador} aria-hidden="true" />
+        <div ref={refBarra} className={fixada ? 'news-filters blog-filters fixada' : 'news-filters blog-filters'} role="group" aria-label="Filtrar por categoria">
           <div className="blog-filters-linha">
             <button type="button" className={!categoria ? 'news-filter active' : 'news-filter'} aria-pressed={!categoria} onClick={(event) => filtrar('', '', event.currentTarget)}>Todos <b>{posts.length}</b></button>
             {categories.map((item) => <button type="button" key={item.slug} className={categoria?.slug === item.slug ? 'news-filter active' : 'news-filter'} aria-pressed={categoria?.slug === item.slug} onClick={(event) => filtrar(item.slug, '', event.currentTarget)}>{item.label} <b>{contar(item.slug)}</b></button>)}

@@ -7,110 +7,107 @@ Este guia é para quem vai cuidar do blog e dos contatos que chegam pela página
 1. A pessoa responde 6 perguntas, uma por tela.
 2. O site soma os pontos (0 a 12) e mostra um dos 4 níveis: Inicial, Em organização, Em evolução ou Estruturado.
 3. Se quiser o resultado completo e uma conversa com o CITi, ela preenche o formulário de contato.
-4. Só nesse momento os dados vão para o banco (Supabase). Quem só faz o quiz não deixa nenhum dado gravado.
+4. Só nesse momento os dados vão para o banco, pela API do blog. Quem só faz o quiz não deixa nenhum dado gravado.
 
-Tudo o que aparece na página (perguntas, pontos, níveis, textos e opções do formulário) está em um único arquivo: `src/config/diagnostico.ts`.
+Tudo o que aparece na página (perguntas, pontos, níveis, textos e opções do formulário) está em um único arquivo: `src/config/diagnostico.ts`. A API usa esse mesmo arquivo para conferir os dados e recalcular a pontuação, então não existe uma segunda cópia das regras.
 
-## 1. Configuração única
+## 1. Configuração
 
-Faça isto uma vez, quando o banco for ligado:
-
-1. Crie o projeto no Supabase **dentro da organização do CITi**, nunca em uma conta pessoal.
-2. Abra o **SQL Editor** do projeto e rode as migrações, nesta ordem:
-   1. `supabase/migrations/20261001000000_diagnostico_e_newsletter.sql`
-   2. `supabase/migrations/20261028000000_diagnostico_amarrado.sql`
-3. Em **Project Settings → API**, copie a **Project URL** e a **anon public key**.
-4. Na raiz do projeto, crie um arquivo `.env` a partir do `.env.example` e preencha:
+O banco (Postgres) e a API ficam no Coolify. A configuração completa está em [12 — Backend e deploy](12-BACKEND-E-DEPLOY.md). Para o site, basta uma variável:
 
 ```env
-VITE_SUPABASE_URL=
-VITE_SUPABASE_ANON_KEY=
+VITE_API_URL=https://endereco-da-api
 ```
 
-5. Reinicie o ambiente (`npm run dev` de novo, ou `docker compose up --build`).
+No Coolify, ela é cadastrada no serviço do site como **Build Variable**, porque o Vite a grava no site durante o build.
 
-A anon key pode ficar no site: ela foi feita para isso. A proteção vem das regras do banco, que deixam o site **apenas inserir** dados, nunca ler, alterar ou apagar. **Nunca** coloque a `service_role` key no `.env` do site.
-
-### Sem o `.env`
+### Sem a variável
 
 - Em `npm run dev`, a página funciona em **modo demonstração**: o formulário aparece, o envio é simulado e os dados aparecem só no console do navegador. Nada é gravado.
-- No build publicado sem `.env`, o formulário não aparece. No lugar dele, o resultado mostra o botão **Falar com o CITi**, que usa o `ctaContatoUrl` de `src/config/site.ts`.
+- No build publicado sem a variável, o formulário não aparece. No lugar dele, o resultado mostra o botão **Falar com o CITi**, que usa o `ctaContatoUrl` de `src/config/site.ts`.
 
-### Banco local (desenvolvimento)
+### Ambiente local
 
-Para gravar de verdade no computador, sem usar o projeto na nuvem (precisa do Docker aberto):
+`docker compose up -d --build` sobe o site, a API e um Postgres no seu computador, já ligados entre si. Os leads enviados em `http://localhost:5173/blog/diagnostico` aparecem no painel local (`/blog/admin/leads`).
 
-1. `npx supabase start` sobe o banco e aplica as migrações de `supabase/migrations/`.
-2. `npx supabase status` mostra a `API_URL` e a `ANON_KEY`. Coloque-as no `.env` como `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY`.
-3. Rode `npm run dev` e envie o formulário. Os leads aparecem no Studio local, em http://127.0.0.1:54323 (Table Editor → `diagnosticos`).
-4. `npx supabase db reset` apaga tudo e reaplica as migrações. `npx supabase stop` desliga o banco.
+## 2. Onde ver os contatos
 
-Esse banco existe só na sua máquina. Para o site publicado, use o projeto na nuvem (passos acima).
+No painel interno, seção **Contatos** (`/blog/admin/leads`), com o login de editora (cadastro em [12 — Backend e deploy](12-BACKEND-E-DEPLOY.md#editoras)). Há duas visões:
 
-## 2. Onde ver os leads
+**Pessoas** (abre primeiro): todo mundo que chegou pelo blog, do mais recente para o mais antigo.
+- Quem fez o diagnóstico aparece com o selo **Diagnóstico** e a etapa atual; quem só assinou a newsletter aparece com o selo **Newsletter**. A mesma pessoa não aparece duas vezes.
+- Busca por nome, e-mail ou empresa e filtro por como a pessoa chegou (Todas, Diagnóstico, Só newsletter).
+- Clicar na pessoa abre os detalhes: contatos (o e-mail abre o programa de e-mail; o telefone abre uma conversa no WhatsApp), resultado do diagnóstico, como conheceu, problema descrito e a etapa.
 
-No Supabase: **Table Editor → `diagnosticos`**, ordenando por `created_at` (mais recentes primeiro). Para exportar, use o botão de exportar CSV do próprio painel.
+**Acompanhamento** (Kanban): uma coluna por etapa (Novo, Em contato, Qualificado, Descartado).
+- Arraste o card para a coluna da nova etapa. No celular, ou pelo teclado, use o seletor de etapa que fica no próprio card.
+- A mudança é salva na hora. Se algo falhar, o card volta para a coluna anterior e aparece um aviso.
 
-Só quem é membro do projeto no Supabase vê esses dados.
+**Leads (CSV)** e **Newsletter (CSV)** baixam planilhas que abrem direto no Excel ou no Google Planilhas.
 
-Colunas que merecem explicação:
+O que cada informação significa:
 
-| Coluna | O que é |
+| Campo | O que é |
 |---|---|
-| `nivel` | Resultado do quiz: `inicial` (0 a 3 pontos), `organizacao` (4 a 6), `evolucao` (7 a 9) ou `estruturado` (10 a 12). |
-| `pontuacao` | Soma dos pontos, de 0 a 12. |
-| `respostas` | Os pontos de cada pergunta, por exemplo `{"processos": 1, "retrabalho": 0, ...}`. Cada pergunta vale 0, 1 ou 2. As chaves são os `id`s em `src/config/diagnostico.ts`. |
-| `problema` | O que a pessoa escreveu sobre o problema de negócio. Opcional: fica vazio quando a pessoa não preenche. Quando preenchido, é o campo mais importante para preparar a conversa. |
-| `como_conheceu` | `linkedin`, `instagram`, `indicacao`, `google`, `blog`, `evento` ou `outro`. |
-| `origem` e `utm_*` | De onde a pessoa veio (por exemplo, o post que levou ao diagnóstico). |
-| `consentimento_versao` | Qual versão do texto de consentimento a pessoa aceitou. |
-| `status` | Andamento do lead (veja abaixo). |
+| Nível | Resultado do quiz: Inicial (0 a 3 pontos), Em organização (4 a 6), Em evolução (7 a 9) ou Estruturado (10 a 12). |
+| Pontuação | Soma dos pontos, de 0 a 12. |
+| Problema | O que a pessoa escreveu sobre o problema de negócio. Opcional. Quando preenchido, é o campo mais importante para preparar a conversa. |
+| Veio por | Como conheceu o CITi e, se houver, a campanha (`utm_source`). |
+| Respostas (no banco) | Os pontos de cada pergunta, por exemplo `{"processos": 1, "retrabalho": 0, ...}`. As chaves são os `id`s em `src/config/diagnostico.ts`. |
+| `consentimento_versao` (no banco) | Qual versão do texto de consentimento a pessoa aceitou. |
 
 ## 3. Como responder um lead
 
-Todo lead chega com `status = novo`. O Comercial atualiza direto no painel:
+Todo lead chega como **Novo**. O Comercial muda a etapa no Kanban (arrastando o card) ou nos detalhes da pessoa:
 
-1. Ao fazer o primeiro contato: `em_contato`.
-2. Depois da conversa: `qualificado` (vale seguir) ou `descartado` (não é o momento ou não tem fit).
+1. Ao fazer o primeiro contato: **Em contato**.
+2. Depois da conversa: **Qualificado** (vale seguir) ou **Descartado** (não é o momento ou não tem fit).
 
 ## 4. Newsletter
 
 As inscrições ficam na tabela `newsletter_inscricoes`. Entram nela:
 
 - quem se inscreve no bloco de newsletter da Home e das notícias;
-- quem marca "Quero receber a newsletter" no formulário do diagnóstico (o banco copia o e-mail sozinho).
+- quem marca "Quero receber a newsletter" no formulário do diagnóstico (a API copia o e-mail sozinha).
 
-O mesmo e-mail não entra duas vezes. Quando a ferramenta de newsletter for escolhida, exporte essa tabela em CSV e importe na ferramenta.
+O mesmo e-mail não entra duas vezes. Quando a ferramenta de newsletter for escolhida, use **Newsletter (CSV)** na seção Contatos do painel e importe a planilha na ferramenta.
 
 ## 5. Como alterar perguntas ou textos
 
-Mude **somente** `src/config/diagnostico.ts`. A página, a pontuação, o formulário e o envio leem tudo de lá. As regras de validação dos campos ficam em `src/lib/diagnostico-schema.ts` e precisam continuar iguais às do banco.
+Mude **somente** `src/config/diagnostico.ts`. A página, a pontuação, o formulário, o envio e a API leem tudo de lá. As regras de validação dos campos ficam em `src/lib/diagnostico-schema.ts` (também usadas pela API) e precisam continuar iguais às regras do banco, em `api/prisma/migrations/`.
+
+Depois de mudar, publique **o site e a API** (os dois usam o arquivo).
 
 Impacto nos dados já gravados:
 
 - **Mudar só o texto de uma pergunta ou opção** (mantendo o `id` e os pontos): os dados antigos continuam comparáveis. Anote a data da mudança.
-- **Trocar o `id`, os pontos ou a pergunta inteira**: as respostas antigas ficam com a chave antiga em `respostas` e deixam de ser comparáveis com as novas. Anote a data e, se possível, mantenha os `id`s.
-- **Mudar as faixas de nível**: os leads antigos continuam com o `nivel` calculado na época. Se mudar o número de níveis ou os nomes, crie também uma migração para o `check` da coluna `nivel`.
+- **Trocar o `id`, os pontos ou a pergunta inteira**: as respostas antigas ficam com a chave antiga e deixam de ser comparáveis com as novas. Anote a data e, se possível, mantenha os `id`s.
+- **Mudar as faixas de nível**: os leads antigos continuam com o nível calculado na época. Se mudar o número de níveis ou os nomes, crie também uma migração para a regra da coluna `nivel` ([12 — Backend e deploy](12-BACKEND-E-DEPLOY.md#mudar-o-banco)).
 - **Mudar o texto de consentimento**: atualize `CONSENTIMENTO_VERSAO` em `src/services/leads.ts` (por exemplo, `diagnostico-v2-2027-01`). Assim fica registrado qual texto cada pessoa aceitou.
 - **Mudar a pontuação máxima** (mais perguntas): o banco aceita até 12 pontos. Crie uma migração antes de publicar.
 
 ## LGPD
 
-O banco guarda os dados do formulário para responder à solicitação, além de origem, página de referência e UTMs. Pedidos de exclusão são atendidos apagando a linha pelo painel do Supabase (e o e-mail em `newsletter_inscricoes`, se houver), conforme a política de privacidade do CITi.
+O banco guarda os dados do formulário para responder à solicitação, além de origem, página de referência e UTMs. Pedidos de exclusão são atendidos por quem cuida da API, no terminal do Postgres no Coolify:
+
+```sql
+delete from diagnosticos where email = 'pessoa@empresa.com.br';
+delete from newsletter_inscricoes where email = 'pessoa@empresa.com.br';
+```
+
+Siga a política de privacidade do CITi e registre a data do pedido.
 
 ## Como testar
 
-1. Sem `.env`, rode `npm run dev`, faça o quiz, envie o formulário e confira o payload no console.
-2. Com o `.env` do CITi, envie um teste e confira a linha em `diagnosticos`, com `respostas`, `pontuacao` e `nivel` preenchidos.
-3. Marque a newsletter e confira a linha em `newsletter_inscricoes`. Envie de novo com o mesmo e-mail: não deve dar erro.
-4. Apague os registros de teste pelo painel.
+1. Sem `VITE_API_URL`, rode `npm run dev`, faça o quiz, envie o formulário e confira o payload no console.
+2. Com o ambiente local (`docker compose up -d --build`), envie um teste e confira o lead em `/blog/admin/leads`, com nível e pontuação.
+3. Marque a newsletter e baixe o CSV da newsletter. Envie de novo com o mesmo e-mail: não deve dar erro nem duplicar.
 
 ## 6. Pendências antes de produção
 
 - **Política de privacidade:** publicar a página e preencher `politicaPrivacidadeUrl` em `src/config/diagnostico.ts`. Hoje o formulário mostra "Política de privacidade (em breve)" sem link.
-- **Aviso ao Comercial:** criar um Database Webhook no Supabase (insert em `diagnosticos`) que avise no Slack ou por e-mail quando chegar lead novo.
-- **Captcha:** se aparecer spam, adicionar Cloudflare Turnstile validado em uma Edge Function. Hoje há só o campo-armadilha e o tempo mínimo de 3 segundos.
-- **Plano do Supabase:** projetos gratuitos podem ser pausados por inatividade. Definir o plano antes de divulgar.
+- **Aviso ao Comercial:** hoje é preciso abrir o painel para ver leads novos. Uma melhoria futura é a API avisar por e-mail ou Slack a cada lead.
+- **Captcha:** se aparecer spam, adicionar Cloudflare Turnstile validado na API. Hoje há o campo-armadilha, o tempo mínimo de 3 segundos e o limite de 5 envios por minuto por pessoa.
 - **Textos:** validar com a Gerente os textos de resultado e de apoio em `src/config/diagnostico.ts`.
-- **Contato:** preencher `ctaContatoUrl` em `src/config/site.ts` (usado quando o banco está desligado).
+- **Contato:** preencher `ctaContatoUrl` em `src/config/site.ts` (usado quando a API está desligada).
 - **Newsletter:** escolher a ferramenta e definir a rotina de exportação.

@@ -1,179 +1,206 @@
-# Blog CITi
+<div align="center">
 
-Protótipo do blog institucional do CITi, empresa júnior de tecnologia B2B da UFPE/CIn. A interface está em português do Brasil e foi preparada para validação com CRO e Gerente antes da revisão de um dev para produção.
+<img src="public/assets/logo-citi.png" alt="CITi" width="120" />
 
-## Stack
+# Blog do CITi
 
-React 18, TypeScript, Vite, Tailwind CSS v4, React Router, React Markdown, React Helmet Async, Lucide React, Inter Tight local via Fontsource e Supabase opcional. Sem `.env`, os formulários continuam em modo demonstração.
+**Ideias que movem negócios. Tecnologia que aproxima pessoas.**
 
-## Documentação
+Blog institucional do CITi, a empresa júnior de tecnologia do Centro de Informática da UFPE.
+Artigos, radar semanal de notícias, diagnóstico digital para empresas e a história do CITi.
 
-O índice editorial e operacional está em [docs/README.md](docs/README.md). Ele aponta para o guia de conteúdo, notícias, radar automático e estratégia editorial.
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-7-3178C6?logo=typescript&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-06B6D4?logo=tailwindcss&logoColor=white)
+![NestJS](https://img.shields.io/badge/NestJS-11-E0234E?logo=nestjs&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-4169E1?logo=postgresql&logoColor=white)
+![Coolify](https://img.shields.io/badge/deploy-Coolify-6B16ED)
 
-## Radar de notícias
+[Rodar o projeto](#-rodar-o-projeto) · [Estrutura](#-estrutura) · [Documentação](#-documentação) · [Deploy](docs/12-BACKEND-E-DEPLOY.md) · [Vai assumir o blog?](docs/13-ROTINA-E-REPASSE.md)
 
-O radar coleta feeds, pontua candidatos e gera relatórios para revisão humana:
+</div>
 
-```bash
-npm run radar -- --checar-fontes
-npm run radar
-npm run radar:promover -- <id> <id>
+---
+
+## ✨ O que tem no blog
+
+| Área | Rota | O que faz |
+| --- | --- | --- |
+| **Home** | `/blog` | Destaque da semana, metodologia "Nosso jeito", temas, radar com globo e "Sobre o CITi" |
+| **Artigos** | `/blog/artigos` | Artigos em Markdown, filtráveis por tema e subtema, com capas geradas |
+| **Notícias** | `/blog/noticias` | Radar semanal: o leitor gira o globo e lê a notícia de cada continente |
+| **Diagnóstico** | `/blog/diagnostico` | Quiz de 6 perguntas com resultado em radar e formulário de contato |
+| **Sobre o CITi** | `/blog/sobre` | Momentos do CITi (eventos, conquistas e projetos) com galerias |
+| **Painel interno** | `/blog/admin/...` | Curadoria e cadastro de notícias, contatos com Kanban, publicação de artigos e métricas de acesso (só editoras) |
+
+Temas fixos do blog:
+
+| Negócios | Soluções | Gestão |
+| --- | --- | --- |
+| Marketing · Vendas | Dados · Desenvolvimento · Inovação · Experiência do cliente | Gestão empresarial · Big techs · Finanças |
+
+## 🧱 Como funciona
+
+```
+ visitante ──► Site (React + nginx) ──► API (NestJS) ──► Postgres
+                    │                        ▲
+   artigos, notícias e momentos              │ sugestões da semana
+   em Markdown no repositório                │
+                                   Radar semanal (GitHub Actions + Claude)
 ```
 
-Os rascunhos ficam em `radar/rascunhos/` e só aparecem no site depois de revisados e movidos para `src/content/noticias/`.
+- **Site:** tudo o que o visitante vê. Conteúdo editorial em Markdown: publicar é fazer um commit.
+- **API** (`api/`): recebe diagnósticos e newsletter, guarda as notícias do radar e atende o painel interno.
+- **Radar** (`scripts/radar/`): toda segunda coleta notícias, pede a copy ao Claude e envia ao painel para revisão humana.
 
-## Rodar
+## 🚀 Rodar o projeto
+
+Você precisa do **Node.js 20+** e do **Docker Desktop**.
+
+```bash
+git clone https://github.com/HannahSummer/blog-citi.git
+cd blog-citi
+docker compose up -d --build
+```
+
+| Serviço | Endereço |
+| --- | --- |
+| Site | http://localhost:5173/blog |
+| API | http://localhost:3000/api/saude |
+| Postgres | `localhost:5433` (usuário `citi`, senha `citi`, banco `blog_citi`) |
+
+Para entrar no painel local, crie uma editora:
+
+```bash
+docker compose exec api npm run editora -- criar voce@citi.org.br "uma senha de teste longa"
+```
+
+<details>
+<summary><b>Só o site, sem Docker</b></summary>
 
 ```bash
 npm install
 npm run dev
 ```
 
-Abra `http://localhost:5173`.
+Sem a API, os formulários funcionam em **modo demonstração** (nada é gravado) e o painel avisa que a API não está configurada.
 
-Com Docker:
+</details>
+
+<details>
+<summary><b>Dependências antigas no Docker</b></summary>
+
+Reconstrói os containers sem apagar o banco local:
 
 ```bash
-docker compose up --build -d
+docker compose up -d --build -V
 ```
 
-Se o volume de dependências estiver antigo:
+</details>
 
-```bash
-docker compose down -v
-docker compose up --build -d
-```
+## 🛠️ Comandos
 
-O `Dockerfile` e o `docker-compose.yml` não precisam de alterações para esta versão.
-
-## Scripts
-
-| Comando | Uso |
+| Comando | Para quê |
 | --- | --- |
-| `npm run dev` | Servidor de desenvolvimento |
-| `npm run typecheck` | Checagem TypeScript |
-| `npm run radar:tipos` | Checagem TypeScript do radar |
-| `npm run build` | Build de produção |
-| `npm run preview` | Preview do build |
+| `npm run dev` | Site em desenvolvimento |
+| `npm run build` | Valida os artigos e gera o site de produção |
+| `npm run typecheck` | Confere os tipos do site |
+| `npm run api:typecheck` | Confere os tipos da API |
+| `npm run api:build` | Compila a API |
+| `npm run check` | Roda tudo que não precisa do navegador: tipos, testes e build do site e da API |
+| `npm run test` | Testes do site (regras compartilhadas e conteúdo) |
+| `npm run api:test` | Testes de integração da API (usa o banco `blog_citi_teste`) |
+| `npm run test:e2e` | Testes de navegador (precisa do `docker compose up -d` no ar) |
+| `npm run radar:tipos` | Confere os tipos do radar |
+| `npm run radar:semanal` | Roda o radar completo ([guia](docs/03-RADAR-AUTOMATICO.md)) |
+| `npm run novo-artigo` | Cria um artigo novo a partir do modelo ([guia](docs/11-COMO-CRIAR-ARTIGO.md)) |
+| `npm run validar-artigos` | Confere o front matter e o tamanho dos artigos |
+| `npm run capas` | Gera as capas dos artigos |
 
-## Rotas
+Antes de abrir um Pull Request, rode `npm run check`. Antes de um deploy, rode também `npm run test:e2e` com o ambiente no ar. Detalhes em [docs/14-TESTES.md](docs/14-TESTES.md).
 
-| Rota | Página |
+## 📁 Estrutura
+
+```
+blog-citi/
+├── src/                        # site (React)
+│   ├── pages/                  # uma página por rota
+│   │   └── admin/              # painel interno (notícias e leads)
+│   ├── components/
+│   │   ├── layout/             # cabeçalho, rodapé, busca e SEO
+│   │   ├── home/               # blocos exclusivos da Home
+│   │   ├── blog/               # cards e destaque de artigos
+│   │   ├── noticias/           # globo, cards e lista de notícias
+│   │   ├── diagnostico/        # quiz, gráfico de radar e formulário
+│   │   ├── sobre/              # abertura animada e seção da Home
+│   │   ├── newsletter/         # bloco de inscrição
+│   │   ├── painel/             # moldura e login do painel interno
+│   │   └── efeitos/            # fundos animados (canvas)
+│   ├── content/                # ✍️ conteúdo em Markdown
+│   │   ├── posts/              #    artigos
+│   │   ├── noticias/           #    notícias escritas à mão
+│   │   └── momentos/           #    momentos do "Sobre o CITi"
+│   ├── config/                 # textos e regras: site, sobre, diagnóstico, notícias
+│   ├── data/                   # leitura do Markdown, temas, subtemas e continentes
+│   ├── services/               # chamadas à API
+│   ├── lib/                    # utilitários (API, datas, CSV, validação)
+│   ├── hooks/ · layouts/ · styles/
+├── api/                        # API (NestJS + Prisma) · ver docs/12
+│   ├── prisma/                 # tabelas e migrações do banco
+│   └── src/                    # módulos: diagnósticos, newsletter, notícias, leads, auth, radar
+├── scripts/
+│   ├── radar/                  # radar semanal de notícias
+│   ├── capas/                  # gerador das capas dos artigos
+│   ├── novo-artigo.ts
+│   └── validar-artigos.ts
+├── public/                     # imagens, capas e logo
+├── docs/                       # 📚 guias de conteúdo, operação e repasse
+├── docker/                     # Dockerfile de desenvolvimento e config do nginx
+├── Dockerfile                  # site em produção
+└── docker-compose.yml          # ambiente local completo
+```
+
+Algumas regras moram em `src/` e são usadas também pela API (diagnóstico, notícias, temas). Ao mudá-las, publique o site e a API. Detalhes em [docs/12](docs/12-BACKEND-E-DEPLOY.md#regras-compartilhadas).
+
+## 📚 Documentação
+
+| Guia | Para quem |
 | --- | --- |
-| `/` | Redireciona para `/blog` |
-| `/blog` | Home, metodologia, destaque, radar, sobre e newsletter |
-| `/blog/artigos` | Lista de artigos |
-| `/blog/artigos?categoria=gestao` | Lista filtrada por categoria |
-| `/blog/artigos/:slug` | Artigo individual |
-| `/blog/noticias` | Notícias mock agrupadas em lista |
-| `/blog/diagnostico?origem=<slug>` | Quiz de autoavaliação e CTA de contato |
-| `/blog/sobre` | Listagem de momentos do CITi |
-| `/blog/sobre/:slug` | Momento individual |
-| `/blog/sobre/quem-somos` | Quem somos, método e projetos |
-| `*` | Página 404 |
+| [13 · Rotina semanal e repasse](docs/13-ROTINA-E-REPASSE.md) | **Comece por aqui** se vai assumir o blog |
+| [14 · Testes](docs/14-TESTES.md) | Quem mexe no código ou antes de um deploy |
+| [01 · Guia de conteúdo](docs/01-GUIA-DE-CONTEUDO.md) | Quem escreve e publica |
+| [11 · Como criar um artigo](docs/11-COMO-CRIAR-ARTIGO.md) | Quem escreve |
+| [02 · Notícias](docs/02-NOTICIAS.md) | Curadoria |
+| [03 · Radar automático](docs/03-RADAR-AUTOMATICO.md) | Curadoria e dev |
+| [04 · Estratégia editorial](docs/04-ESTRATEGIA-EDITORIAL.md) | Marketing e gerência |
+| [05 · Diagnóstico e leads](docs/05-DIAGNOSTICO-E-LEADS.md) | Comercial e dev |
+| [12 · Backend e deploy](docs/12-BACKEND-E-DEPLOY.md) | Dev |
 
-## Estrutura
+Índice completo em [docs/README.md](docs/README.md).
 
-```text
-src/
-├── App.tsx
-├── main.tsx
-├── config/site.ts          # Menu e textos fixos de interface
-├── components/             # Header, busca, cards, footer, SEO e newsletter
-├── layouts/SiteLayout.tsx
-├── pages/                  # Home, artigos, notícias, diagnóstico e 404
-├── content/
-│   ├── posts/*.md
-│   ├── noticias/*.md
-│   └── momentos/*.md
-├── data/                   # Posts, notícias e categorias
-├── hooks/useUtm.ts
-├── services/leads.ts       # Persistência Supabase ou modo demonstração
-├── lib/supabase.ts         # Cliente Supabase opcional
-└── styles/
-    ├── tokens.css
-    └── app.css
+## 🤝 Como contribuir
 
-public/assets/logo-citi.png
-```
+1. Crie uma branch a partir da `main` (`artigo/nome`, `ajuste/nome`…).
+2. Faça a mudança e rode as validações.
+3. Abra um Pull Request e peça revisão. Conteúdo editorial só vai ao ar depois de revisão humana.
+4. Ao juntar na `main`, o Coolify publica o site e a API.
 
-## Publicar um artigo
+Regras do projeto:
+- interface e textos em português do Brasil;
+- nada de chaves ou senhas no código (`.env` fica fora do Git);
+- resumos próprios, sempre com fonte e link.
 
-1. Crie um arquivo `.md` em `src/content/posts/`.
-2. Use o front matter abaixo.
-3. Escreva o conteúdo editorial no corpo do Markdown.
-4. Rode `npm run typecheck` e `npm run build`.
+## 📌 Pendências antes do lançamento
 
-```md
----
-title: "Título do artigo"
-excerpt: "Resumo curto"
-meta_description: "Descrição para SEO com aproximadamente 150 caracteres."
-date: "2026-09-30"
-categoria: "negocios"
-etapa_funil: "awareness"
-cta_tipo: "newsletter"
-author: "CITi"
-featured: false
-accent: "lime"
+- [ ] Revisão humana dos artigos e notícias publicados
+- [ ] Política de privacidade (link no formulário do diagnóstico)
+- [ ] Domínio definitivo e deploy no Coolify ([passo a passo](docs/12-BACKEND-E-DEPLOY.md#deploy-no-coolify))
+- [ ] Editoras cadastradas e Secrets do radar no GitHub
+- [ ] Aviso ao Comercial a cada lead novo (hoje os leads ficam no painel)
+
 ---
 
-Texto do artigo em Markdown.
-```
-
-Categorias: `negocios`, `solucoes` e `gestao`. Subtemas: `marketing-comercial`, `inovacao` e `financeiro`. CTAs: `newsletter`, `diagnostico` e `material-rico`.
-
-## Publicar uma notícia
-
-1. Crie um arquivo `.md` em `src/content/noticias/`.
-2. Use resumo próprio e nunca copie o texto da fonte.
-3. Informe a fonte e o link original.
-4. Rode as validações antes de publicar.
-
-```md
----
-title: "Título da notícia"
-date: "2026-09-30"
-categoria: "inovacao"
-fonte: "Nome do veículo"
-link: "https://exemplo.com/materia"
-resumo: "Resumo em palavras próprias."
----
-
-Por que isso importa para o seu negócio.
-```
-
-As notícias atuais têm `[EXEMPLO]`, `Fonte exemplo` e `#` de propósito, para não serem confundidas com conteúdo real.
-
-## Onde editar
-
-- Menu, hero, metodologia e sobre: `src/config/site.ts`
-- Categorias: `src/data/categorias.ts`
-- Formulários mock: `src/services/leads.ts`
-- Supabase e migração: `src/lib/supabase.ts` e `supabase/migrations/`
-- UTM: `src/hooks/useUtm.ts`
-- Logo: `public/assets/logo-citi.png`
-
-## TODOs antes de produção
-
-- Validar com CRO e Gerente os textos do hero e da metodologia.
-- Substituir números provisórios da seção Sobre por dados reais.
-- Confirmar prazo de retorno com o Comercial.
-- Definir a política de privacidade.
-- Fornecer a logo SVG oficial, se disponível.
-- Integrar o aviso de novos leads ao backend/CRM ou webhook do Supabase.
-- Trocar notícias mock por curadoria aprovada.
-- Revisar acessibilidade, SEO e conteúdo com um dev antes da publicação.
-
-## Checklist de teste
-
-- `/blog`: hero, categorias, âncoras de metodologia/sobre, radar e newsletter.
-- `/blog/artigos?categoria=gestao`: filtro e URL.
-- `/blog/artigos/:slug`: leitura, CTA e artigos relacionados.
-- `/blog/noticias`: âncoras e links de fonte.
-- `/blog/diagnostico?origem=<slug>&utm_source=linkedin`: quiz completo, cada nível de resultado e CTA externo.
-- `/blog/sobre`: listagem de momentos e filtro por tipo.
-- `/blog/sobre/:slug`: leitura de um momento, galeria opcional e relacionados.
-- `/blog/destaques/...`: redirect legado para `/blog/sobre`.
-- `/blog/artigos?categoria=solucoes`: filtro principal e subtemas publicados.
-- Atalho `/`, busca, menu mobile, Escape e navegação por teclado.
+<div align="center">
+Feito com curiosidade pelo <b>CITi</b> · Recife-PE
+</div>

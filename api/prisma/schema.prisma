@@ -1,0 +1,121 @@
+// Banco do Blog CITi. Os nomes de tabela e coluna seguem o português do site.
+// Regras de tamanho e valores permitidos também estão como CHECK no SQL das migrações
+// (prisma/migrations): o banco recusa dado inválido mesmo que alguém pule a API.
+// Para mudar a estrutura, leia docs/12-BACKEND-E-DEPLOY.md antes.
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Leads do diagnóstico. Só entram com consentimento de contato.
+model Diagnostico {
+  id                    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at            DateTime @default(now()) @db.Timestamptz(6)
+  nome                  String
+  email                 String
+  empresa               String
+  cargo                 String
+  telefone              String
+  como_conheceu         String
+  problema              String?
+  respostas             Json
+  pontuacao             Int      @db.SmallInt
+  nivel                 String
+  consentimento_contato Boolean
+  newsletter_optin      Boolean  @default(false)
+  consentimento_versao  String
+  origem                String?
+  pagina_referencia     String?
+  utm_source            String?
+  utm_medium            String?
+  utm_campaign          String?
+  utm_content           String?
+  /// novo | em_contato | qualificado | descartado
+  status                String   @default("novo")
+
+  @@index([created_at(sort: Desc)])
+  @@map("diagnosticos")
+}
+
+/// Lista da newsletter. E-mail sempre gravado em minúsculas.
+model NewsletterInscricao {
+  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at           DateTime @default(now()) @db.Timestamptz(6)
+  email                String   @unique
+  origem               String?
+  consentimento_versao String
+  ativo                Boolean  @default(true)
+
+  @@map("newsletter_inscricoes")
+}
+
+/// Quem pode entrar no painel /blog/admin/noticias. Cadastro pelo comando `editora:criar`.
+model Editora {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email      String    @unique
+  senha_hash String
+  ativo      Boolean   @default(true)
+  criado_em  DateTime  @default(now()) @db.Timestamptz(6)
+  revisoes   Noticia[]
+
+  @@map("editoras")
+}
+
+/// Sugestões do radar semanal. O site público só mostra as `aprovada`.
+model Noticia {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  semana          DateTime  @db.Date
+  /// pendente | aprovada | rejeitada
+  status          String    @default("pendente")
+  titulo          String
+  resumo          String
+  por_que_importa String
+  categoria       String
+  subtema         String?
+  continente      String?
+  fonte           String
+  link            String    @unique
+  data_fonte      DateTime? @db.Date
+  // Contexto para quem revisa; não aparece no site.
+  titulo_original String
+  trecho_feed     String?
+  motivo          String?
+  pontuacao       Int?      @db.SmallInt
+  revisado_por    String?   @db.Uuid
+  revisora        Editora?  @relation(fields: [revisado_por], references: [id], onDelete: SetNull)
+  revisado_em     DateTime? @db.Timestamptz(6)
+  publicado_em    DateTime? @db.Timestamptz(6)
+  criado_em       DateTime  @default(now()) @db.Timestamptz(6)
+  atualizado_em   DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+
+  @@index([status, publicado_em(sort: Desc)])
+  @@index([semana(sort: Desc)])
+  @@map("noticias")
+}
+
+/// Métricas de acesso, anônimas: sem cookies e sem IP. `visitante` é um código que muda todo dia,
+/// gerado a partir do IP e do navegador com uma chave diária; serve só para contar visitantes únicos do dia.
+model Visita {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  criado_em    DateTime @default(now()) @db.Timestamptz(6)
+  caminho      String
+  /// true na primeira página aberta (entrada no site); só nela a origem é registrada.
+  entrada      Boolean  @default(false)
+  /// Site de onde a pessoa veio (ex.: instagram.com), "direto" ou null nas páginas seguintes.
+  origem       String?
+  utm_source   String?
+  utm_medium   String?
+  utm_campaign String?
+  /// celular | tablet | computador
+  dispositivo  String
+  visitante    String
+
+  @@index([criado_em(sort: Desc)])
+  @@map("visitas")
+}

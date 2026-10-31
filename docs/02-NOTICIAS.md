@@ -9,7 +9,7 @@ O "Radar da semana" é curadoria, não agregação. O valor está no **olhar do 
 | Lugar | O que é | Aparece no site? |
 |---|---|---|
 | Painel `/blog/admin/noticias` → **Para revisar** | Sugestões da semana, com a copy escrita pelo Claude | Não |
-| Painel → **Publicadas** | Notícias aprovadas (tabela `noticias` no Supabase) | **Sim**, na hora |
+| Painel → **Publicadas** | Notícias aprovadas (tabela `noticias` no Postgres, via API) | **Sim**, na hora |
 | Painel → **Rejeitadas** | Sugestões descartadas | Não |
 | `src/content/noticias/` | Notícias escritas à mão em Markdown (formato antigo, continua valendo) | **Sim** |
 
@@ -72,18 +72,29 @@ Uma notícia publicada pode ser corrigida na aba **Publicadas** ou tirada do ar 
 
 Se numa semana não houver nada bom, rejeite tudo. **Três notícias boas valem mais que cinco medianas.**
 
+### Cadastrar uma notícia à mão
+
+Além das sugestões do radar, dá para publicar uma notícia encontrada pela equipe: no painel, clique em **Cadastrar notícia**.
+
+1. Preencha título, resumo e "por que importa" **com palavras próprias**, a categoria, o continente (para aparecer no globo) e a fonte com o link da matéria.
+2. A prévia à direita mostra como a notícia fica no site.
+3. **Publicar notícia** coloca no ar na hora (quem cadastra já é editora). Ela aparece na aba **Publicadas**, onde dá para corrigir ou tirar do ar.
+
+As regras são as mesmas do radar: limites de tamanho, link completo com `https://` e um link não pode ser cadastrado duas vezes.
+
 ### Quem pode aprovar
 
-Só contas cadastradas como editoras. Para incluir alguém (uma vez, por quem administra o Supabase):
+Só contas cadastradas como editoras. O mesmo login abre todas as seções do painel: Notícias, Contatos, Artigos e Métricas.
+Quem cuida da API cadastra, troca a senha ou remove o acesso com o comando `editora`, no terminal do serviço da API no Coolify:
 
-1. **Authentication → Users → Add user**: e-mail e senha da pessoa, marcando *Auto Confirm User*.
-2. **SQL Editor**:
-   ```sql
-   insert into public.editores (user_id, email)
-   select id, email from auth.users where email = 'pessoa@citi.org.br';
-   ```
+```bash
+npm run editora -- criar     pessoa@citi.org.br "senha com 12 ou mais caracteres"
+npm run editora -- senha     pessoa@citi.org.br "nova senha"
+npm run editora -- desativar pessoa@citi.org.br
+npm run editora -- listar
+```
 
-Para remover o acesso: `delete from public.editores where email = 'pessoa@citi.org.br';`.
+Passo a passo em [12 — Backend e deploy](12-BACKEND-E-DEPLOY.md#editoras).
 
 ## Métricas da seção
 
