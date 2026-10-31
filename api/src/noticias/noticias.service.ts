@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common'
+import type { Prisma } from '@prisma/client'
 import { PrismaService } from '../prisma/prisma.service'
 import type { StatusNoticia } from '../../../src/config/noticias'
 import type { CamposEditaveis } from './validacao'
@@ -18,6 +19,12 @@ export class NoticiasService {
   listar(status: StatusNoticia) {
     const ordem = status === 'pendente' ? { pontuacao: { sort: 'desc', nulls: 'last' } } as const : { revisado_em: { sort: 'desc', nulls: 'last' } } as const
     return this.prisma.noticia.findMany({ where: { status }, orderBy: [{ semana: 'desc' }, ordem], take: 100 })
+  }
+
+  // Notícia cadastrada à mão por uma editora: já entra publicada, com a editora como revisora.
+  criar(sugestao: Prisma.NoticiaUncheckedCreateInput, editoraId: string) {
+    const agora = new Date()
+    return this.prisma.noticia.create({ data: { ...sugestao, status: 'aprovada', revisado_por: editoraId, revisado_em: agora, publicado_em: agora } })
   }
 
   // Ao mudar o status, carimba quem revisou e quando; aprovar publica, qualquer outro status tira do ar.

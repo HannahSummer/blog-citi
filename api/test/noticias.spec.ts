@@ -124,4 +124,47 @@ describe('notícias: site público e painel de curadoria', () => {
       expect(inexistente.status).toBe(404)
     })
   })
+
+  describe('cadastro manual (POST /api/admin/noticias)', () => {
+    const manual = {
+      titulo: 'Notícia cadastrada à mão pela curadoria',
+      resumo: 'Resumo escrito pela curadoria com mais de quarenta caracteres para passar.',
+      por_que_importa: 'Importa porque mostra o cadastro manual funcionando ponta a ponta no painel.',
+      categoria: 'negocios',
+      subtema: 'vendas',
+      continente: 'america-do-sul',
+      fonte: 'Fonte Manual',
+      link: 'https://exemplo.com/manual',
+    }
+    const cadastrar = (corpo: object, autorizacao = `Bearer ${token}`) => request(app.getHttpServer()).post('/api/admin/noticias').set('Authorization', autorizacao).send(corpo)
+
+    it('exige login de editora', async () => {
+      expect((await request(app.getHttpServer()).post('/api/admin/noticias').send(manual)).status).toBe(401)
+    })
+
+    it('publica na hora, com a editora como revisora, e aparece no site', async () => {
+      const r = await cadastrar(manual)
+      expect(r.status).toBe(201)
+      expect(r.body.status).toBe('aprovada')
+      expect(r.body.publicado_em).not.toBeNull()
+      expect(r.body.revisado_por).toBe(editoraId)
+      expect(r.body.titulo_original).toBe(manual.titulo)
+      const publico = await request(app.getHttpServer()).get('/api/noticias')
+      expect(publico.body.map((n: { titulo: string }) => n.titulo)).toContain(manual.titulo)
+    })
+
+    it('recusa com as mesmas regras do radar, apontando o campo', async () => {
+      const r = await cadastrar({ ...manual, titulo: 'curto', link: 'sem-protocolo' })
+      expect(r.status).toBe(400)
+      expect(r.body.erro).toMatch(/titulo/)
+      expect(r.body.erro).toMatch(/link/)
+    })
+
+    it('recusa link que já existe', async () => {
+      await cadastrar(manual)
+      const r = await cadastrar({ ...manual, titulo: 'Outro título com tamanho suficiente' })
+      expect(r.status).toBe(400)
+      expect(r.body.erro).toMatch(/Já existe/)
+    })
+  })
 })

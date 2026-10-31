@@ -10,6 +10,8 @@ import { AuthModule } from './auth/auth.module'
 import { NoticiasModule } from './noticias/noticias.module'
 import { RadarModule } from './radar/radar.module'
 import { LeadsModule } from './leads/leads.module'
+import { MetricasModule } from './metricas/metricas.module'
+import { ArtigosModule } from './artigos/artigos.module'
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { LeadsModule } from './leads/leads.module'
     NoticiasModule,
     RadarModule,
     LeadsModule,
+    MetricasModule,
+    ArtigosModule,
   ],
   controllers: [SaudeController],
   providers: [{ provide: APP_GUARD, useClass: LimiteEnviosGuard }],

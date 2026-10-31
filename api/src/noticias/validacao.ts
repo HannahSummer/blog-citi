@@ -49,6 +49,27 @@ export function validarEdicao(corpo: unknown): CamposEditaveis {
   return campos
 }
 
+// Segunda-feira da semana atual (AAAA-MM-DD), como o radar usa para agrupar as sugestões.
+function segundaDaSemana(hoje = new Date()) {
+  const segunda = new Date(Date.UTC(hoje.getUTCFullYear(), hoje.getUTCMonth(), hoje.getUTCDate()))
+  segunda.setUTCDate(segunda.getUTCDate() - ((segunda.getUTCDay() + 6) % 7))
+  return segunda.toISOString().slice(0, 10)
+}
+
+// Notícia cadastrada à mão no painel: mesmas regras das sugestões do radar. O que só o radar
+// teria (semana, título original da fonte, motivo) é preenchido aqui.
+export function validarNovaNoticia(corpo: unknown) {
+  if (!ehObjeto(corpo)) return { sugestao: undefined, erro: 'Envio inválido.' }
+  return validarSugestao({
+    ...corpo,
+    semana: segundaDaSemana(),
+    titulo_original: texto(corpo.titulo),
+    trecho_feed: null,
+    motivo: 'Cadastrada manualmente no painel',
+    pontuacao: null,
+  })
+}
+
 // Sugestão nova vinda do radar: todos os campos obrigatórios conferidos.
 export function validarSugestao(item: unknown) {
   if (!ehObjeto(item)) return { erro: 'item inválido' }

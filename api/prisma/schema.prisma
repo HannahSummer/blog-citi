@@ -98,3 +98,24 @@ model Noticia {
   @@index([semana(sort: Desc)])
   @@map("noticias")
 }
+
+/// Métricas de acesso, anônimas: sem cookies e sem IP. `visitante` é um código que muda todo dia,
+/// gerado a partir do IP e do navegador com uma chave diária; serve só para contar visitantes únicos do dia.
+model Visita {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  criado_em    DateTime @default(now()) @db.Timestamptz(6)
+  caminho      String
+  /// true na primeira página aberta (entrada no site); só nela a origem é registrada.
+  entrada      Boolean  @default(false)
+  /// Site de onde a pessoa veio (ex.: instagram.com), "direto" ou null nas páginas seguintes.
+  origem       String?
+  utm_source   String?
+  utm_medium   String?
+  utm_campaign String?
+  /// celular | tablet | computador
+  dispositivo  String
+  visitante    String
+
+  @@index([criado_em(sort: Desc)])
+  @@map("visitas")
+}

@@ -19,7 +19,7 @@ export async function criarApp(): Promise<NestExpressApplication> {
 
 // Esvazia as tabelas entre os testes.
 export async function limparBanco() {
-  await prisma.$executeRawUnsafe('TRUNCATE diagnosticos, newsletter_inscricoes, noticias, editoras RESTART IDENTITY CASCADE')
+  await prisma.$executeRawUnsafe('TRUNCATE diagnosticos, newsletter_inscricoes, noticias, editoras, visitas RESTART IDENTITY CASCADE')
 }
 
 export async function criarEditora(email = 'editora@citi.org.br', senha = 'senha-de-teste-123456', ativo = true) {
