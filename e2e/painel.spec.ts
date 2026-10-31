@@ -27,7 +27,7 @@ test('a página do painel não é indexada', async ({ page }) => {
 test.describe('com conta de editora', () => {
   test.skip(!email || !senha, 'Defina E2E_EDITORA_EMAIL e E2E_EDITORA_SENHA para testar o login real.')
 
-  test('entra, vê as abas e alterna entre notícias e leads', async ({ page }) => {
+  test('entra, vê as seções e alterna entre notícias, contatos, artigos e métricas', async ({ page }) => {
     await page.goto('/blog/admin/noticias')
     await page.locator('input[type="email"]').fill(email!)
     await page.locator('input[type="password"]').fill(senha!)
@@ -37,9 +37,19 @@ test.describe('com conta de editora', () => {
     await expect(page.getByRole('tab', { name: /Para revisar/ })).toBeVisible()
 
     const secoes = page.getByRole('navigation', { name: 'Seções do painel' })
-    await secoes.getByRole('link', { name: 'Leads e newsletter' }).click()
+    await secoes.getByRole('link', { name: 'Contatos' }).click()
     await expect(page).toHaveURL(/\/blog\/admin\/leads/)
     await expect(page.getByRole('button', { name: /Leads \(CSV\)/ })).toBeVisible()
+
+    await expect(page.getByRole('tab', { name: /Acompanhamento/ })).toBeVisible()
+
+    await secoes.getByRole('link', { name: 'Artigos' }).click()
+    await expect(page).toHaveURL(/\/blog\/admin\/artigos/)
+    await expect(page.getByRole('heading', { name: /No ar agora/ })).toBeVisible()
+
+    await secoes.getByRole('link', { name: 'Métricas' }).click()
+    await expect(page).toHaveURL(/\/blog\/admin\/metricas/)
+    await expect(page.getByRole('button', { name: /Últimos 30 dias/ })).toBeVisible()
 
     await secoes.getByRole('link', { name: 'Notícias' }).click()
     await expect(page).toHaveURL(/\/blog\/admin\/noticias/)

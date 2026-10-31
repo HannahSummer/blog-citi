@@ -52,11 +52,15 @@ api/
     ├── config.ts              # lê e confere as variáveis de ambiente
     ├── diagnosticos/          # POST /api/diagnosticos
     ├── newsletter/            # POST /api/newsletter
-    ├── noticias/              # notícias públicas e painel de curadoria
-    ├── leads/                 # painel de leads e exportação
+    ├── noticias/              # notícias públicas, curadoria e cadastro manual
+    ├── leads/                 # painel de contatos (lista, Kanban) e exportação
+    ├── artigos/               # publica artigo pelo painel (commit no GitHub)
+    ├── metricas/              # contagem anônima de acessos e resumo do painel
     ├── auth/                  # login das editoras (senha com scrypt, token JWT de 8 horas)
     ├── radar/                 # recebe as sugestões do radar
+    ├── limite/                # limite de envios por IP
     ├── saude/                 # GET /api/saude (healthcheck)
+    ├── app.setup.ts           # configuração comum (prefixo, CORS, Swagger), usada também nos testes
     └── cli/editora.ts         # comando para cadastrar editoras
 ```
 
@@ -70,7 +74,11 @@ api/
 | `GET /api/noticias` | páginas de notícias e globo | aberta (só aprovadas, só colunas públicas) |
 | `POST /api/auth/entrar`, `GET /api/auth/eu` | login do painel | 5 tentativas/minuto por IP |
 | `GET /api/admin/noticias`, `PATCH /api/admin/noticias/:id` | painel de notícias | token de editora |
-| `GET /api/admin/diagnosticos`, `PATCH /api/admin/diagnosticos/:id`, `GET /api/admin/newsletter` | painel de leads | token de editora |
+| `GET /api/admin/diagnosticos`, `PATCH /api/admin/diagnosticos/:id`, `GET /api/admin/newsletter` | painel de contatos (lista e Kanban) | token de editora |
+| `POST /api/admin/noticias` | cadastro manual de notícia (publica na hora) | token de editora |
+| `GET /api/admin/artigos/configuracao`, `POST /api/admin/artigos` | publicar artigo pelo painel (commit no GitHub) | token de editora |
+| `POST /api/metricas/visita` | o site avisa cada página aberta (anônimo) | 60 por minuto por IP |
+| `GET /api/admin/metricas?dias=30` | painel de métricas | token de editora |
 | `POST /api/radar/noticias` | radar semanal | `RADAR_TOKEN` |
 
 Ninguém de fora lê leads: só as editoras logadas, pelo painel.
@@ -92,6 +100,7 @@ Com `SWAGGER_HABILITADO=true`, a API publica a documentação interativa em `/ap
 | API (Coolify) | `JWT_SECRET` | Assina o login das editoras (48+ caracteres aleatórios) |
 | API (Coolify) | `RADAR_TOKEN` | Senha do radar (32+ caracteres aleatórios) |
 | API (Coolify) | `SWAGGER_HABILITADO` | `false` (padrão). `true` publica a documentação em `/api/docs` |
+| API (Coolify) | `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` | Opcionais. Liberam a publicação de artigos pelo painel ([Artigos pelo painel](#artigos-pelo-painel)) |
 | API (Coolify) | `SITE_URL` | Endereço do site; só ele pode chamar a API pelo navegador. Vários? Separe por vírgula |
 | GitHub Secrets | `ANTHROPIC_API_KEY`, `API_URL`, `RADAR_TOKEN` | Radar semanal |
 
@@ -194,6 +203,42 @@ npm run editora -- listar
 ```
 
 Passe a senha para a pessoa por um canal privado e peça para ela não reutilizar. Quando alguém sair do CITi, **desative** a conta no mesmo dia.
+
+## Artigos pelo painel
+
+Em `/blog/admin/artigos`, uma editora escreve o artigo e clica em **Publicar**. A API cria o arquivo `src/content/posts/<endereço>.md` com um commit no GitHub, e o Coolify publica sozinho em cerca de 2 minutos (deploy automático).
+
+- **Regras:** o formulário usa as mesmas regras do build (`src/config/artigos.ts`). Se o painel aceitar, o deploy não quebra.
+- **Endereço:** gerado a partir do título. Se já existir um artigo com o mesmo endereço, o painel recusa (não sobrescreve).
+- **Rascunho:** marcando "Salvar como rascunho", o arquivo vai com `draft: true` e não aparece no site. Para publicar depois, troque para `draft: false` no GitHub.
+- **Capa:** o artigo novo usa a capa padrão da categoria. Para uma capa própria, gere com `npm run capas` e faça o commit.
+- **Corrigir um artigo no ar:** edite o arquivo direto no GitHub ou pelo fluxo de [11 — Como criar artigo](11-COMO-CRIAR-ARTIGO.md).
+
+Para ligar, cadastre na API do Coolify:
+
+1. No GitHub: **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**.
+   - **Repository access:** só o repositório do blog.
+   - **Permissions → Contents:** Read and write. Nenhuma outra permissão.
+   - Validade: até 1 ano. Anote quando vence (a tabela de acessos do [guia 13](13-ROTINA-E-REPASSE.md) tem espaço para isso).
+2. No Coolify, na API: `GITHUB_TOKEN` (o token), `GITHUB_REPO` (`HannahSummer/blog-citi`, ou o repositório da organização se ele for transferido) e `GITHUB_BRANCH` (a branch que o Coolify publica: hoje `deploy-coolify`; depois do merge, `main`).
+3. Redeploy da API. O aviso amarelo some da página de artigos.
+
+O token só fica na API. Se ele vazar, revogue no GitHub e gere outro. Sem as variáveis, o resto do painel funciona normalmente.
+
+## Métricas de acesso
+
+O site avisa a API a cada página aberta e o painel `/blog/admin/metricas` mostra visitantes, visitas, páginas mais vistas, de onde as pessoas vieram (Instagram, LinkedIn, Google, acesso direto), campanhas e aparelhos, em 7, 30 ou 90 dias.
+
+A contagem é **anônima**:
+- não usa cookies nem guarda nada no navegador;
+- não guarda o IP: cada visitante vira um código que muda todo dia (hash do IP e do navegador com uma chave diária), usado só para contar visitantes únicos do dia;
+- não conta o painel interno, robôs nem quem ativou "não rastrear" no navegador.
+
+Por isso não dá para saber **quem** visitou; quem quer ser contatado aparece em Contatos, pelo diagnóstico ou pela newsletter. A política de privacidade do CITi deve mencionar essa contagem anônima de acessos.
+
+Para medir uma divulgação, use links com campanha, por exemplo:
+`https://blog.citi.org.br/blog?utm_source=instagram&utm_campaign=lancamento`.
+Os dados ficam na tabela `visitas` do Postgres.
 
 ## Mudar o banco
 

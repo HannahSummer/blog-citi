@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { NavLink } from 'react-router-dom'
-import { AlertTriangle, LogOut } from 'lucide-react'
+import { AlertTriangle, ChartColumn, LogOut, Newspaper, PenLine, Users } from 'lucide-react'
 import { apiConfigurada } from '../../lib/api'
 import { entrar, sair, sessaoAtual } from '../../services/painel'
 
 type Acesso = 'carregando' | 'sem-api' | 'login' | 'editor'
 
-// Moldura das páginas do painel interno (/blog/admin/*): título, abas Notícias/Leads, login e saída.
+// Moldura das páginas do painel interno (/blog/admin/*): título, seções (Notícias, Contatos, Artigos, Métricas), login e saída.
 // O conteúdo só aparece para editoras logadas; a API confere o token em toda chamada.
 export function PainelInterno({ titulo, destaque, children }: { titulo: string; destaque: string; children: ReactNode }) {
   const [acesso, setAcesso] = useState<Acesso>('carregando')
@@ -32,7 +32,12 @@ export function PainelInterno({ titulo, destaque, children }: { titulo: string; 
         <div><span className="eyebrow">Painel interno</span><h1>{titulo} <strong>{destaque}</strong></h1></div>
         {acesso === 'editor' ? <button type="button" className="button-secondary" onClick={sairDaConta}><LogOut size={15} /> Sair{email && <small>{email}</small>}</button> : null}
       </div>
-      {acesso === 'editor' && <nav className="admin-nav" aria-label="Seções do painel"><NavLink to="/blog/admin/noticias">Notícias</NavLink><NavLink to="/blog/admin/leads">Leads e newsletter</NavLink></nav>}
+      {acesso === 'editor' && <nav className="admin-nav" aria-label="Seções do painel">
+        <NavLink to="/blog/admin/noticias"><Newspaper size={16} aria-hidden="true" /> Notícias</NavLink>
+        <NavLink to="/blog/admin/leads"><Users size={16} aria-hidden="true" /> Contatos</NavLink>
+        <NavLink to="/blog/admin/artigos"><PenLine size={16} aria-hidden="true" /> Artigos</NavLink>
+        <NavLink to="/blog/admin/metricas"><ChartColumn size={16} aria-hidden="true" /> Métricas</NavLink>
+      </nav>}
       {acesso === 'carregando' && <p className="admin-muted">Carregando…</p>}
       {acesso === 'sem-api' && <p className="admin-aviso"><AlertTriangle size={16} /> A API não está configurada neste ambiente (VITE_API_URL). Veja docs/12-BACKEND-E-DEPLOY.md.</p>}
       {acesso === 'login' && <Login onEntrar={verificar} />}

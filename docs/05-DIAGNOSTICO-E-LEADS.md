@@ -30,14 +30,20 @@ No Coolify, ela é cadastrada no serviço do site como **Build Variable**, porqu
 
 `docker compose up -d --build` sobe o site, a API e um Postgres no seu computador, já ligados entre si. Os leads enviados em `http://localhost:5173/blog/diagnostico` aparecem no painel local (`/blog/admin/leads`).
 
-## 2. Onde ver os leads
+## 2. Onde ver os contatos
 
-No painel interno: **`/blog/admin/leads`**, com o login de editora (cadastro em [12 — Backend e deploy](12-BACKEND-E-DEPLOY.md#editoras)).
+No painel interno, seção **Contatos** (`/blog/admin/leads`), com o login de editora (cadastro em [12 — Backend e deploy](12-BACKEND-E-DEPLOY.md#editoras)). Há duas visões:
 
-- Os leads aparecem do mais recente para o mais antigo, com filtros por status.
-- Cada card mostra nome, cargo, empresa, nível, pontuação, como a pessoa conheceu o CITi e o problema que ela descreveu.
-- O e-mail abre o seu programa de e-mail; o telefone abre uma conversa no WhatsApp.
-- **Leads (CSV)** baixa uma planilha com todos os leads, que abre direto no Excel ou no Google Planilhas.
+**Pessoas** (abre primeiro): todo mundo que chegou pelo blog, do mais recente para o mais antigo.
+- Quem fez o diagnóstico aparece com o selo **Diagnóstico** e a etapa atual; quem só assinou a newsletter aparece com o selo **Newsletter**. A mesma pessoa não aparece duas vezes.
+- Busca por nome, e-mail ou empresa e filtro por como a pessoa chegou (Todas, Diagnóstico, Só newsletter).
+- Clicar na pessoa abre os detalhes: contatos (o e-mail abre o programa de e-mail; o telefone abre uma conversa no WhatsApp), resultado do diagnóstico, como conheceu, problema descrito e a etapa.
+
+**Acompanhamento** (Kanban): uma coluna por etapa (Novo, Em contato, Qualificado, Descartado).
+- Arraste o card para a coluna da nova etapa. No celular, ou pelo teclado, use o seletor de etapa que fica no próprio card.
+- A mudança é salva na hora. Se algo falhar, o card volta para a coluna anterior e aparece um aviso.
+
+**Leads (CSV)** e **Newsletter (CSV)** baixam planilhas que abrem direto no Excel ou no Google Planilhas.
 
 O que cada informação significa:
 
@@ -52,7 +58,7 @@ O que cada informação significa:
 
 ## 3. Como responder um lead
 
-Todo lead chega como **Novo**. O Comercial muda o status no próprio card:
+Todo lead chega como **Novo**. O Comercial muda a etapa no Kanban (arrastando o card) ou nos detalhes da pessoa:
 
 1. Ao fazer o primeiro contato: **Em contato**.
 2. Depois da conversa: **Qualificado** (vale seguir) ou **Descartado** (não é o momento ou não tem fit).
@@ -64,7 +70,7 @@ As inscrições ficam na tabela `newsletter_inscricoes`. Entram nela:
 - quem se inscreve no bloco de newsletter da Home e das notícias;
 - quem marca "Quero receber a newsletter" no formulário do diagnóstico (a API copia o e-mail sozinha).
 
-O mesmo e-mail não entra duas vezes. Quando a ferramenta de newsletter for escolhida, use **Newsletter (CSV)** no painel de leads e importe a planilha na ferramenta.
+O mesmo e-mail não entra duas vezes. Quando a ferramenta de newsletter for escolhida, use **Newsletter (CSV)** na seção Contatos do painel e importe a planilha na ferramenta.
 
 ## 5. Como alterar perguntas ou textos
 

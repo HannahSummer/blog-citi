@@ -7,7 +7,7 @@ Este guia explica o que é testado, como rodar cada parte e o que fazer quando u
 | Camada | O que cobre | Onde fica | Comando | Precisa de |
 | --- | --- | --- | --- | --- |
 | **Regras do site** | Pontuação e níveis do diagnóstico, validação do formulário, datas, envio em modo demonstração, conteúdo em Markdown (categorias, subtemas, capas e fotos que existem) | `src/**/*.test.ts` | `npm run test` | nada |
-| **API** | Rotas, validações, consentimento, login, token do radar, limite de envios, painel de notícias e leads | `api/test/*.spec.ts` | `npm run api:test` | Postgres de teste (ver abaixo) |
+| **API** | Rotas, validações, consentimento, login, token do radar, limite de envios, painel de notícias (inclusive cadastro manual), contatos, artigos e métricas | `api/test/*.spec.ts` | `npm run api:test` | Postgres de teste (ver abaixo) |
 | **Navegador** | Páginas abrem sem erro, quiz e formulário do diagnóstico, newsletter, busca, painel (login, abas, sair) | `e2e/*.spec.ts` | `npm run test:e2e` | site e API no ar (`docker compose up -d`) |
 
 Tudo de uma vez, sem o navegador:
@@ -49,6 +49,8 @@ Para apontar para outro banco, defina `DATABASE_URL` antes de rodar. Nunca apont
 | `limite.spec.ts` | Limite real de envios por IP (5 por minuto no diagnóstico e no login) |
 | `infra.spec.ts` | Healthcheck, CORS só para o site, Swagger, vários envios seguidos |
 | `regras.spec.ts` | Hash das senhas, validação de edição e de sugestões, variáveis obrigatórias |
+| `metricas.spec.ts` | Contagem anônima: sem IP, origem só na entrada, robôs e painel ignorados, código diário do visitante, resumo do painel |
+| `artigos.spec.ts` | Publicação pelo painel com o GitHub simulado: formato do arquivo, rascunho, mesmas regras do build, não sobrescreve, erros do GitHub, falta de configuração |
 
 ### Limite de envios nos testes
 

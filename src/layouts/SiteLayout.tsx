@@ -2,6 +2,8 @@ import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { SiteFooter } from '../components/layout/SiteFooter'
 import { SiteHeader } from '../components/layout/SiteHeader'
+import { BarraInferior } from '../components/layout/BarraInferior'
+import { RastreioVisitas } from '../components/layout/RastreioVisitas'
 
 function ScrollToHash() {
   const location = useLocation()
@@ -13,4 +15,4 @@ function ScrollToHash() {
   return null
 }
 
-export function SiteLayout() { return <><ScrollToHash /><SiteHeader /><main className="site-main"><Outlet /></main><SiteFooter /></> }
+export function SiteLayout() { return <><ScrollToHash /><RastreioVisitas /><SiteHeader /><main className="site-main"><Outlet /></main><SiteFooter /><BarraInferior /></> }

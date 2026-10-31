@@ -1,14 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
-import { Link } from 'react-router-dom'
-import { ArrowUpRight, ChevronLeft, ChevronRight, MapPin, X } from 'lucide-react'
 import { geoDistance, geoGraticule10, geoOrthographic, geoPath } from 'd3-geo'
 import type { Position } from 'geojson'
 import { feature } from 'topojson-client'
 import type { GeometryCollection, Topology } from 'topojson-specification'
-import { continentes, getContinente } from '../../data/continentes'
+import { continentes } from '../../data/continentes'
 import type { NewsItem } from '../../data/noticias'
-import { nomeDaFonte } from './NoticiaCard'
 
 // Globo pontilhado (inspirado em um wireframe com d3) que posiciona as notícias por continente.
 // Arrastar gira; tocar em um continente mostra as notícias dele. Os botões abaixo fazem o mesmo pelo teclado.
@@ -82,15 +78,15 @@ function marcadores(noticias: NewsItem[]): Marcador[] {
 
 const reduzirMovimento = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-// `destinoCard`: elemento onde o card da notícia escolhida é renderizado (na página, a lateral acima da newsletter).
-// `decorativo`: só o globo girando (arrastável), sem pinos, botões de continente nem card. Usado na Home.
-export default function GloboNoticias({ noticias, destinoCard, decorativo = false }: { noticias: NewsItem[]; destinoCard?: HTMLElement | null; decorativo?: boolean }) {
+// `selecionado` e `onSelecionar`: o continente escolhido fica com a página (que filtra a lista e mostra o painel).
+// `decorativo`: só o globo girando (arrastável), sem pinos, botões de continente nem instrução. Usado na Home.
+export default function GloboNoticias({ noticias, selecionado: selecionadoPagina, onSelecionar, decorativo = false }: { noticias: NewsItem[]; selecionado?: number | null; onSelecionar?: (indice: number | null) => void; decorativo?: boolean }) {
   const caixaRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const rotuloRef = useRef<HTMLSpanElement>(null)
   const [carregado, setCarregado] = useState(false)
-  const [selecionado, setSelecionado] = useState<number | null>(null)
-  const [posicao, setPosicao] = useState(0)
+  const [interno, setInterno] = useState<number | null>(null)
+  const selecionado = selecionadoPagina !== undefined ? selecionadoPagina : interno
 
   const pinos = useMemo(() => (decorativo ? [] : marcadores(noticias)), [noticias, decorativo])
   const porContinente = useMemo(() => continentes.map((_, indice) => pinos.filter((pino) => pino.continente === indice).map((pino) => pino.item)), [pinos])
@@ -99,7 +95,7 @@ export default function GloboNoticias({ noticias, destinoCard, decorativo = fals
   estado.current.selecionado = selecionado
   estado.current.pinos = pinos
 
-  const escolher = (indice: number | null) => { setSelecionado(indice); setPosicao(0) }
+  const escolher = (indice: number | null) => { if (onSelecionar) onSelecionar(indice); else setInterno(indice) }
   estado.current.escolher = escolher
 
   useEffect(() => {
@@ -323,44 +319,20 @@ export default function GloboNoticias({ noticias, destinoCard, decorativo = fals
     }
   }, [])
 
-  const lista = selecionado === null ? [] : porContinente[selecionado]
-  const atual = lista[Math.min(posicao, lista.length - 1)]
-  const continente = selecionado === null ? null : continentes[selecionado]
-
-  const card = <div className="globo-card" aria-live="polite">
-    {!continente && <p className="globo-dica"><MapPin size={15} aria-hidden="true" /> Arraste o globo e toque em um continente para ver as notícias de lá.</p>}
-    {continente && <>
-      <div className="globo-card-topo">
-        <span className="globo-card-local"><MapPin size={14} aria-hidden="true" /> {atual?.local ?? continente.label}{lista.length > 1 && <> · {Math.min(posicao, lista.length - 1) + 1} de {lista.length}</>}</span>
-        <button type="button" className="globo-icone" aria-label="Fechar" onClick={() => escolher(null)}><X size={16} /></button>
-      </div>
-      {atual ? <>
-        <h2>{atual.title}</h2>
-        <div className="globo-card-acoes">
-          <Link to={`/blog/noticias#${atual.slug}`}>Ler o resumo</Link>
-          <a href={atual.link} target="_blank" rel="noopener noreferrer">{nomeDaFonte(atual)} <ArrowUpRight size={14} /><span className="sr-only"> (abre em nova aba)</span></a>
-          {lista.length > 1 && <span className="globo-card-setas">
-            <button type="button" className="globo-icone" aria-label="Notícia anterior" onClick={() => setPosicao((valor) => (valor - 1 + lista.length) % lista.length)}><ChevronLeft size={16} /></button>
-            <button type="button" className="globo-icone" aria-label="Próxima notícia" onClick={() => setPosicao((valor) => (valor + 1) % lista.length)}><ChevronRight size={16} /></button>
-          </span>}
-        </div>
-      </> : <p className="globo-dica">Nenhuma notícia de {getContinente(continente.slug)?.label} nesta edição.</p>}
-    </>}
-  </div>
-
-  return <div className={decorativo ? "globo globo--decorativo" : "globo"}>
+  return <div className={decorativo ? 'globo globo--decorativo' : 'globo'}>
     <div className={carregado ? 'globo-caixa pronto' : 'globo-caixa'} ref={caixaRef}>
       <canvas ref={canvasRef} aria-hidden="true" />
       <span className="globo-rotulo" ref={rotuloRef} hidden />
       {!carregado && <span className="globo-carregando">Carregando o mapa…</span>}
     </div>
 
-    {!decorativo && <><div className="globo-continentes" role="group" aria-label="Notícias por continente">
-      {continentes.map((item, indice) => <button type="button" key={item.slug} className={selecionado === indice ? 'active' : undefined} aria-pressed={selecionado === indice} onClick={() => escolher(selecionado === indice ? null : indice)}>
-        {item.label} <b>{porContinente[indice].length}</b>
-      </button>)}
-    </div>
-
-    {destinoCard ? createPortal(card, destinoCard) : card}</>}
+    {!decorativo && <>
+      <p className="globo-instrucao"><span className="globo-legenda" aria-hidden="true" /> Cada ponto é uma notícia. Arraste para girar e toque num continente para ver as notícias dele.</p>
+      <div className="globo-continentes" role="group" aria-label="Notícias por continente">
+        {continentes.map((item, indice) => <button type="button" key={item.slug} className={selecionado === indice ? 'active' : undefined} aria-pressed={selecionado === indice} onClick={() => escolher(selecionado === indice ? null : indice)}>
+          {item.label} <b>{porContinente[indice].length}</b>
+        </button>)}
+      </div>
+    </>}
   </div>
 }

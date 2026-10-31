@@ -72,9 +72,19 @@ Uma notícia publicada pode ser corrigida na aba **Publicadas** ou tirada do ar 
 
 Se numa semana não houver nada bom, rejeite tudo. **Três notícias boas valem mais que cinco medianas.**
 
+### Cadastrar uma notícia à mão
+
+Além das sugestões do radar, dá para publicar uma notícia encontrada pela equipe: no painel, clique em **Cadastrar notícia**.
+
+1. Preencha título, resumo e "por que importa" **com palavras próprias**, a categoria, o continente (para aparecer no globo) e a fonte com o link da matéria.
+2. A prévia à direita mostra como a notícia fica no site.
+3. **Publicar notícia** coloca no ar na hora (quem cadastra já é editora). Ela aparece na aba **Publicadas**, onde dá para corrigir ou tirar do ar.
+
+As regras são as mesmas do radar: limites de tamanho, link completo com `https://` e um link não pode ser cadastrado duas vezes.
+
 ### Quem pode aprovar
 
-Só contas cadastradas como editoras. O mesmo login abre o painel de notícias e o de leads (`/blog/admin/leads`).
+Só contas cadastradas como editoras. O mesmo login abre todas as seções do painel: Notícias, Contatos, Artigos e Métricas.
 Quem cuida da API cadastra, troca a senha ou remove o acesso com o comando `editora`, no terminal do serviço da API no Coolify:
 
 ```bash

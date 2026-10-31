@@ -8,9 +8,11 @@ Este guia é para quem assume o blog do CITi. Ele resume o que fazer toda semana
 |---|---|---|---|
 | Segunda, 8h (automático) | O radar coleta notícias, o Claude escreve a copy e as sugestões chegam como pendentes | GitHub Actions | aba **Actions** do repositório |
 | Segunda ou terça | Revisar as sugestões: editar, aprovar ou rejeitar. Três boas valem mais que cinco medianas | Curadoria | `/blog/admin/noticias` ([02 — Notícias](02-NOTICIAS.md)) |
-| Toda semana | Ver os leads novos e atualizar o status | Comercial | `/blog/admin/leads` ([05 — Diagnóstico](05-DIAGNOSTICO-E-LEADS.md)) |
-| Quando houver artigo | Escrever, revisar e publicar o artigo por Pull Request | Conteúdo | [11 — Como criar artigo](11-COMO-CRIAR-ARTIGO.md) |
+| Toda semana | Ver as pessoas novas e mover os leads no Kanban (Novo, Em contato, Qualificado, Descartado) | Comercial | Painel → Contatos ([05 — Diagnóstico](05-DIAGNOSTICO-E-LEADS.md)) |
+| Quando houver artigo | Escrever e publicar pelo painel (ou por Pull Request, para quem mexe no código) | Conteúdo | Painel → Artigos ([11 — Como criar artigo](11-COMO-CRIAR-ARTIGO.md)) |
+| Quando houver notícia fora do radar | Cadastrar à mão, com fonte e link | Curadoria | Painel → Notícias → Cadastrar notícia ([02 — Notícias](02-NOTICIAS.md)) |
 | Quando houver evento | Publicar um momento em "Sobre o CITi" (um arquivo `.md` por momento, fotos em `public/images/sobre/`) | Conteúdo | `src/content/momentos/` |
+| Uma vez por mês | Olhar as métricas: o que mais foi lido e de onde vieram as visitas | Marketing | Painel → Métricas |
 | Uma vez por mês | Conferir se o backup do banco rodou e se o radar não está com fontes quebradas | Técnico | Coolify → Postgres → Backups; `npm run radar -- --checar-fontes` |
 
 Se o radar falhar numa segunda, a aba **Actions** mostra o erro e é possível rodar de novo em **Run workflow**. Rodar duas vezes na mesma semana não duplica notícias.
@@ -38,7 +40,8 @@ Mantenha esta lista atualizada com o nome de quem é responsável hoje. Todos os
 | Coolify (servidor do CITi) | Deploy do site, da API e do banco; terminal para cadastrar editoras | _preencher_ |
 | Anthropic Console (conta do CITi) | Chave do Claude usada pelo radar e controle de custo | _preencher_ |
 | DNS do domínio `citi.org.br` | Domínios do blog e da API | _preencher_ |
-| Contas de editora do painel | Revisar notícias e ver leads | lista com `npm run editora -- listar` |
+| Token do GitHub da API (`GITHUB_TOKEN`) | Publicar artigos pelo painel. **Vence:** _preencher a data_; gere outro antes | _preencher_ |
+| Contas de editora do painel | Notícias, contatos, artigos e métricas | lista com `npm run editora -- listar` |
 
 ## Quando alguém sai da equipe
 

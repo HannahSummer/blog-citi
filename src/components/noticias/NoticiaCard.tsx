@@ -22,7 +22,8 @@ interface NoticiaCardProps {
 // Usado na página de notícias e na prévia do painel de curadoria, para os dois ficarem iguais.
 export function NoticiaCard({ item, numero, destaque = false, ordem = 0, previa = false }: NoticiaCardProps) {
   const fonte = nomeDaFonte(item)
-  const classe = ['news-card', destaque && 'news-card--lead', `news-card--${item.categorySlug}`].filter(Boolean).join(' ')
+  // Sem número (prévia do painel), o card ocupa a largura toda em vez de reservar a coluna do número.
+  const classe = ['news-card', destaque && 'news-card--lead', numero === undefined && 'news-card--sem-numero', `news-card--${item.categorySlug}`].filter(Boolean).join(' ')
   return <article className={classe} id={previa ? undefined : item.slug} style={{ '--ordem': ordem } as CSSProperties}>
     {numero !== undefined && <span className="news-card-number" aria-hidden="true">{String(numero).padStart(2, '0')}</span>}
     <div className="news-card-body">

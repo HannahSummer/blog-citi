@@ -32,7 +32,7 @@ Artigos, radar semanal de notícias, diagnóstico digital para empresas e a hist
 | **Notícias** | `/blog/noticias` | Radar semanal: o leitor gira o globo e lê a notícia de cada continente |
 | **Diagnóstico** | `/blog/diagnostico` | Quiz de 6 perguntas com resultado em radar e formulário de contato |
 | **Sobre o CITi** | `/blog/sobre` | Momentos do CITi (eventos, conquistas e projetos) com galerias |
-| **Painel interno** | `/blog/admin/noticias` · `/blog/admin/leads` | Curadoria das notícias, leads do diagnóstico e newsletter (só editoras) |
+| **Painel interno** | `/blog/admin/...` | Curadoria e cadastro de notícias, contatos com Kanban, publicação de artigos e métricas de acesso (só editoras) |
 
 Temas fixos do blog:
 

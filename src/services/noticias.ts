@@ -64,3 +64,10 @@ export async function listarNoticias(status: StatusNoticia): Promise<NoticiaPain
 export async function salvarNoticia(id: string, campos: Partial<CamposEditaveis> & { status?: StatusNoticia }): Promise<NoticiaPainel> {
   return chamarApi<NoticiaPainel>(`/admin/noticias/${id}`, { metodo: 'PATCH', corpo: campos, token: lerToken() })
 }
+
+// Notícia cadastrada à mão no painel: já entra publicada.
+export interface NovaNoticia { titulo: string; resumo: string; por_que_importa: string; categoria: string; subtema: string | null; continente: string | null; fonte: string; link: string; data_fonte: string | null }
+
+export async function cadastrarNoticia(noticia: NovaNoticia): Promise<NoticiaPainel> {
+  return chamarApi<NoticiaPainel>('/admin/noticias', { metodo: 'POST', corpo: noticia, token: lerToken() })
+}
