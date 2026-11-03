@@ -1,6 +1,6 @@
 import { ArrowRight } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { SEO } from '../components/SEO'
+import { SEO } from '../components/layout/SEO'
 import { formatarData } from '../lib/datas'
 import { getMomentos, getTipos } from '../data/momentos'
 import { sobreConfig } from '../config/sobre'

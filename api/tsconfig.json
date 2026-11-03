@@ -1,0 +1,21 @@
+{
+  // rootDir é a raiz do repositório porque a API importa regras compartilhadas com o site
+  // (src/config/diagnostico.ts, src/lib/diagnostico-schema.ts e src/data/*). O build sai em dist/api/src.
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "rootDir": "..",
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "forceConsistentCasingInFileNames": true,
+    "sourceMap": true
+  },
+  "include": ["src"]
+}
