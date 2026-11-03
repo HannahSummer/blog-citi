@@ -210,6 +210,17 @@ São três recursos no mesmo projeto: **Postgres**, **API** e **Site**. Faça ne
 
 Enquanto o site estiver num endereço temporário do Coolify (`*.sslip.io`), o nginx avisa o Google para não indexar. No domínio definitivo, a indexação é normal.
 
+### Site na Vercel (opcional)
+
+O site também pode ser publicado na Vercel, que dá HTTPS de graça (`*.vercel.app`). A API e o banco continuam no Coolify. A configuração está em `vercel.json` (rotas do React Router e cache).
+
+1. Na Vercel: **Add New → Project**, importe o repositório e escolha a branch que o Coolify publica.
+2. **Environment Variables:** `VITE_API_URL` = domínio da API **com `https://`**. Um site em HTTPS não consegue chamar uma API em `http://` (o navegador bloqueia), e o diagnóstico, a newsletter, as notícias e o painel param de funcionar.
+3. **Deploy.**
+4. No Coolify, na API, acrescente o endereço da Vercel em `SITE_URL`, separado por vírgula (por exemplo `https://blog.citi.org.br,https://blog-citi.vercel.app`), e faça redeploy da API.
+
+Cada push na branch, inclusive os artigos publicados pelo painel, atualiza a Vercel e o Coolify. No endereço `*.vercel.app`, o site avisa o Google para não indexar.
+
 ### 4. Deploy automático
 
 Ative **Auto Deploy** nos dois apps. Cada push na branch configurada publica de novo. Recomendado: configurar a branch `main` e só juntar mudanças nela por Pull Request.
