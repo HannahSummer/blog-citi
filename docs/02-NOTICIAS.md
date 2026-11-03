@@ -11,11 +11,10 @@ O "Radar da semana" é curadoria, não agregação. O valor está no **olhar do 
 | Painel `/blog/admin/noticias` → **Para revisar** | Sugestões da semana, com a copy escrita pelo Claude | Não |
 | Painel → **Publicadas** | Notícias aprovadas (tabela `noticias` no Postgres, via API) | **Sim**, na hora |
 | Painel → **Rejeitadas** | Sugestões descartadas | Não |
-| `src/content/noticias/` | Notícias escritas à mão em Markdown (formato antigo, continua valendo) | **Sim** |
 
-O site mostra as duas origens juntas, da mais recente para a mais antiga.
+Todas as notícias ficam no painel, inclusive as que eram escritas à mão em Markdown (`src/content/noticias/`): elas foram levadas para o banco em novembro de 2026 e podem ser corrigidas ou tiradas do ar na aba **Publicadas**. Para uma notícia nova, use **Cadastrar notícia**; não é preciso mexer no código.
 
-## Modelo do arquivo
+## Modelo do arquivo (formato antigo, só para referência)
 
 ```markdown
 ---

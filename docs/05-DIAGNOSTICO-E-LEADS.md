@@ -38,6 +38,7 @@ No painel interno, seção **Contatos** (`/blog/admin/leads`), com o login de ed
 - Quem fez o diagnóstico aparece com o selo **Diagnóstico** e a etapa atual; quem só assinou a newsletter aparece com o selo **Newsletter**. A mesma pessoa não aparece duas vezes.
 - Busca por nome, e-mail ou empresa e filtro por como a pessoa chegou (Todas, Diagnóstico, Só newsletter).
 - Clicar na pessoa abre os detalhes: contatos (o e-mail abre o programa de e-mail; o telefone abre uma conversa no WhatsApp), resultado do diagnóstico, como conheceu, problema descrito e a etapa.
+- **Apagar contato**, nos detalhes, apaga de vez tudo daquele e-mail: todos os diagnósticos e a inscrição na newsletter. O painel pede confirmação antes. Use para limpar testes ou quando a pessoa pedir a exclusão dos dados (LGPD). Não dá para desfazer; para só tirar alguém do funil, prefira a etapa **Descartado**.
 
 **Acompanhamento** (Kanban): uma coluna por etapa (Novo, Em contato, Qualificado, Descartado).
 - Arraste o card para a coluna da nova etapa. No celular, ou pelo teclado, use o seletor de etapa que fica no próprio card.

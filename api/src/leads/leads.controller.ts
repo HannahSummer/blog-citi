@@ -1,8 +1,8 @@
-import { ApiTags, ApiBearerAuth, ApiBody, ApiOperation, ApiSecurity } from '@nestjs/swagger'
-import { BadRequestException, Body, Controller, Get, NotFoundException, Param, ParseUUIDPipe, Patch, UseGuards } from '@nestjs/common'
+import { ApiTags, ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiSecurity } from '@nestjs/swagger'
+import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, ParseUUIDPipe, Patch, Query, UseGuards } from '@nestjs/common'
 import { EditoraGuard } from '../auth/editora.guard'
 import { PrismaService } from '../prisma/prisma.service'
-import { ehObjeto } from '../comum/texto'
+import { ehObjeto, texto } from '../comum/texto'
 
 const STATUS_LEAD = ['novo', 'em_contato', 'qualificado', 'descartado']
 
@@ -37,5 +37,22 @@ export class LeadsController {
   @Get('newsletter')
   newsletter() {
     return this.prisma.newsletterInscricao.findMany({ where: { ativo: true }, orderBy: { created_at: 'desc' }, select: { email: true, origem: true, created_at: true } })
+  }
+
+  // DELETE /api/admin/contatos?email=: apaga de vez tudo daquele e-mail (diagnósticos e newsletter).
+  // Serve para limpar testes e para atender pedidos de exclusão de dados (LGPD).
+  @ApiOperation({ summary: 'Apagar todos os dados de um contato (diagnósticos e newsletter)' })
+  @ApiQuery({ name: 'email', required: true })
+  @Delete('contatos')
+  async apagarContato(@Query('email') email: unknown) {
+    const alvo = texto(email)
+    if (!alvo || alvo.length > 254) throw new BadRequestException({ erro: 'Informe o e-mail do contato.' })
+    const doEmail = { email: { equals: alvo, mode: 'insensitive' as const } }
+    const [diagnosticos, newsletter] = await this.prisma.$transaction([
+      this.prisma.diagnostico.deleteMany({ where: doEmail }),
+      this.prisma.newsletterInscricao.deleteMany({ where: doEmail }),
+    ])
+    if (!diagnosticos.count && !newsletter.count) throw new NotFoundException({ erro: 'Contato não encontrado.' })
+    return { diagnosticos: diagnosticos.count, newsletter: newsletter.count }
   }
 }

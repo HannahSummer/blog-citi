@@ -17,13 +17,14 @@ describe('painel de leads (/api/admin)', () => {
   })
   afterAll(async () => { await app.close(); await prisma.$disconnect() })
 
-  const comToken = (metodo: 'get' | 'patch', caminho: string) => request(app.getHttpServer())[metodo](caminho).set('Authorization', `Bearer ${token}`)
+  const comToken = (metodo: 'get' | 'patch' | 'delete', caminho: string) => request(app.getHttpServer())[metodo](caminho).set('Authorization', `Bearer ${token}`)
 
   it('todas as rotas do painel exigem token', async () => {
     const chamadas = [
       () => request(app.getHttpServer()).get('/api/admin/diagnosticos'),
       () => request(app.getHttpServer()).get('/api/admin/newsletter'),
       () => request(app.getHttpServer()).patch(`/api/admin/diagnosticos/${UUID_INEXISTENTE}`).send({ status: 'novo' }),
+      () => request(app.getHttpServer()).delete('/api/admin/contatos?email=maria@empresa.com.br'),
     ]
     for (const chamada of chamadas) expect((await chamada()).status).toBe(401)
   })
@@ -62,5 +63,23 @@ describe('painel de leads (/api/admin)', () => {
     await prisma.newsletterInscricao.create({ data: { email: 'inativa@empresa.com', consentimento_versao: 'v1', ativo: false } })
     const r = await comToken('get', '/api/admin/newsletter')
     expect(r.body.map((item: { email: string }) => item.email)).toEqual(['ativa@empresa.com'])
+  })
+
+  it('apaga um contato: todos os diagnósticos e a newsletter daquele e-mail, sem tocar nos outros', async () => {
+    await request(app.getHttpServer()).post('/api/diagnosticos').send(leadValido({ newsletter_optin: true }))
+    await request(app.getHttpServer()).post('/api/diagnosticos').send(leadValido())
+    await request(app.getHttpServer()).post('/api/diagnosticos').send(leadValido({ nome: 'Julia Pino', email: 'julia@empresa.com.br', newsletter_optin: true }))
+    await prisma.newsletterInscricao.create({ data: { email: 'outra@empresa.com', consentimento_versao: 'v1' } })
+
+    const r = await comToken('delete', '/api/admin/contatos?email=MARIA@empresa.com.br')
+    expect(r.status).toBe(200)
+    expect(r.body).toEqual({ diagnosticos: 2, newsletter: 1 })
+    expect((await prisma.diagnostico.findMany()).map((lead) => lead.nome)).toEqual(['Julia Pino'])
+    expect((await prisma.newsletterInscricao.findMany({ orderBy: { email: 'asc' } })).map((item) => item.email)).toEqual(['julia@empresa.com.br', 'outra@empresa.com'])
+  })
+
+  it('apagar contato sem e-mail responde 400 e e-mail inexistente responde 404', async () => {
+    expect((await comToken('delete', '/api/admin/contatos')).status).toBe(400)
+    expect((await comToken('delete', '/api/admin/contatos?email=ninguem@empresa.com')).status).toBe(404)
   })
 })

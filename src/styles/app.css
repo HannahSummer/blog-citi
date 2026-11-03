@@ -144,7 +144,6 @@ body { overflow-x: hidden; }
 @media (prefers-reduced-motion: reduce) { .success-check circle, .success-check path { stroke-dashoffset: 0; }.score-marker, .radar-shape, .radar-dot { transition: none; } }
 
 /* Painel de curadoria de notícias (/blog/admin/noticias) */
-.admin-page { padding: 190px 0 110px; }
 .admin-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 36px; }
 .admin-head h1 { margin-top: 16px; font-size: clamp(36px, 5vw, 60px); font-weight: 300; line-height: 1; letter-spacing: var(--tracking-tight); }
 .admin-head .button-secondary small { margin-left: 6px; color: var(--muted); font-size: 11px; }
@@ -186,7 +185,7 @@ body { overflow-x: hidden; }
 .admin-actions button:disabled { opacity: .45; cursor: not-allowed; }
 .admin-danger:not(:disabled):hover { border-color: #ff8d8d; color: #ff8d8d; }
 @media (max-width: 900px) { .admin-card-grid { grid-template-columns: 1fr; } }
-@media (max-width: 600px) { .admin-page { padding-top: 150px; }.admin-head { align-items: start; flex-direction: column; }.admin-card { padding: 20px; }.admin-row { grid-template-columns: 1fr; }.admin-preview { padding-inline: 16px; } }
+@media (max-width: 600px) { .admin-head { align-items: start; flex-direction: column; }.admin-card { padding: 20px; }.admin-row { grid-template-columns: 1fr; }.admin-preview { padding-inline: 16px; } }
 
 /* Página de notícias: banner, filtros, destaque e linha do tempo por semana */
 .news-banner { padding-bottom: 24px; }
@@ -204,8 +203,8 @@ body { overflow-x: hidden; }
 .news-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 64px; padding-bottom: 110px; }
 .news-main { min-width: 0; }
 .news-filters { position: sticky; z-index: 5; top: 96px; display: flex; gap: 8px; overflow-x: auto; margin: 0 -8px 28px; padding: 10px 8px; background: transparent; scrollbar-width: none; transition: background .2s; }
-/* O fundo só aparece quando a barra gruda no topo (useBarraFixa); parada, ela não cria uma faixa escura sobre o fundo. */
-.news-filters.fixada { background: linear-gradient(to bottom, var(--paper) 70%, rgba(19,27,23,0)); }
+/* Sem faixa atrás da barra: quando ela gruda no topo (useBarraFixa), só os botões ganham fundo fosco para continuar legíveis sobre os cards. */
+.news-filters.fixada .news-filter:not(.active) { background: rgba(19,27,23,.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 .news-filter { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border: 1px solid var(--line-strong); border-radius: var(--radius-pill); color: var(--muted); background: rgba(19,27,23,.6); font: inherit; font-size: 13px; cursor: pointer; transition: color .2s, border-color .2s, background .2s; }
 .news-filter b { min-width: 20px; padding: 1px 6px; border-radius: var(--radius-pill); color: var(--ink); background: rgba(255,255,255,.08); font-size: 11px; font-weight: 600; }
 .news-filter:hover { border-color: var(--lime); color: var(--ink); }
@@ -582,10 +581,6 @@ a.news-card-link:hover svg, a.news-card-link:focus-visible svg { transform: tran
 .sobre-home + .newsletter { margin-top: 24px; }
 
 /* Painel interno: abas Notícias / Leads e página de leads */
-.admin-nav { display: flex; gap: 6px; margin: -12px 0 28px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
-.admin-nav a { padding: 8px 14px; border-radius: 10px; color: var(--muted); font-size: 14px; }
-.admin-nav a:hover { color: var(--ink); }
-.admin-nav a.active { color: var(--lime); background: rgba(0,219,89,.08); font-weight: 600; }
 .admin-tabs button b { margin-left: 4px; font-weight: 700; opacity: .7; }
 .admin-leads-topo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
 .admin-leads-exportar { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -671,9 +666,45 @@ a.news-card-link:hover svg, a.news-card-link:focus-visible svg { transform: tran
   .home-radar-globo { position: relative; top: auto; right: auto; width: 110vw; margin: 8px 0 0 calc(50% - 4vw); transform: none; }
 }
 
-/* Painel: navegação com ícones */
-.admin-nav { flex-wrap: wrap; }
-.admin-nav a { display: inline-flex; align-items: center; gap: 7px; }
+/* Painel: menu lateral (no celular, barra no topo) */
+.painel { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: 100vh; }
+body:has(.painel) { padding-bottom: 0; }
+/* Login: botão de olho para mostrar ou esconder a senha */
+.campo-senha { position: relative; display: block; }
+.campo-senha input { width: 100%; padding-right: 48px; }
+.campo-senha button { position: absolute; top: 50%; right: 6px; display: grid; place-items: center; width: 38px; height: 38px; border: 0; border-radius: 10px; background: none; color: var(--muted); cursor: pointer; transform: translateY(-50%); }
+.campo-senha button:hover { color: var(--ink); background: rgba(255,255,255,.05); }
+.campo-senha button:focus-visible { outline: 2px solid var(--lime); outline-offset: 1px; }
+.painel-lateral { position: sticky; top: 0; display: flex; flex-direction: column; gap: 28px; height: 100vh; padding: 28px 18px 22px; background: var(--surface); border-right: 1px solid var(--line); }
+.painel-logo { display: flex; align-items: center; gap: 10px; padding: 0 10px; }
+.painel-logo img { width: 74px; height: auto; }
+.painel-logo span { padding: 3px 9px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+.painel-nav { display: flex; flex-direction: column; gap: 4px; }
+.painel-nav a { display: flex; align-items: center; gap: 11px; padding: 11px 12px; border-radius: 12px; color: var(--muted); font-size: 15px; }
+.painel-nav a:hover { color: var(--ink); background: rgba(255,255,255,.04); }
+.painel-nav a.active { color: var(--lime); background: rgba(0,219,89,.09); font-weight: 600; }
+.painel-rodape { display: flex; flex-direction: column; gap: 6px; margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line); }
+.painel-site, .painel-sair { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border: 0; border-radius: 10px; background: none; color: var(--muted); font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+.painel-site:hover, .painel-sair:hover { color: var(--ink); background: rgba(255,255,255,.04); }
+.painel-sair { flex-wrap: wrap; }
+.painel-sair small { flex-basis: 100%; padding-left: 25px; overflow: hidden; color: var(--muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.painel-conteudo { width: min(100%, 1240px); padding: 56px clamp(20px, 4vw, 56px) 96px; }
+@media (max-width: 900px) {
+  .painel { grid-template-columns: minmax(0, 1fr); }
+  .painel-lateral { z-index: 20; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 10px 16px; height: auto; padding: 12px 16px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .painel-logo { padding: 0; }
+  .painel-logo img { width: 56px; }
+  .painel-nav { order: 3; flex: 1 0 100%; flex-direction: row; overflow-x: auto; scrollbar-width: none; }
+  .painel-nav a { flex: 0 0 auto; padding: 8px 12px; font-size: 14px; }
+  .painel-rodape { flex-direction: row; margin: 0 0 0 auto; padding: 0; border: 0; }
+  .painel-site, .painel-sair { padding: 8px 10px; }
+  .painel-sair small { display: none; }
+  .painel-conteudo { padding: 32px 16px 72px; }
+}
+@media (max-width: 480px) {
+  .painel-nav a { flex: 1 0 auto; justify-content: center; padding: 8px 10px; }
+  .painel-nav a svg { display: none; }
+}
 
 /* Painel > Contatos: lista de pessoas e Kanban de acompanhamento */
 .contatos-topo { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
@@ -698,6 +729,7 @@ a.news-card-link:hover svg, a.news-card-link:focus-visible svg { transform: tran
 .pessoa-dados dt { color: var(--muted); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
 .pessoa-dados dd { margin: 2px 0 0; color: var(--ink); font-size: 14px; }
 .pessoa-etapa { max-width: 260px; }
+.pessoa-apagar { align-self: flex-start; margin-top: 4px; }
 .selo { padding: 3px 9px; border: 1px solid var(--line-strong); border-radius: var(--radius-pill); color: var(--muted); font-size: 11px; font-weight: 600; white-space: nowrap; }
 .selo--diagnostico { border-color: rgba(0,219,89,.35); color: var(--lime); }
 .selo--novo { border-color: rgba(91,141,239,.5); color: #8fb0f5; }

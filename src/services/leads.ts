@@ -90,3 +90,5 @@ export interface InscricaoNewsletter { email: string; origem: string | null; cre
 export const listarLeads = () => chamarApi<Lead[]>('/admin/diagnosticos', { token: lerToken() })
 export const atualizarStatusLead = (id: string, status: StatusLead) => chamarApi<Lead>(`/admin/diagnosticos/${id}`, { metodo: 'PATCH', corpo: { status }, token: lerToken() })
 export const listarNewsletter = () => chamarApi<InscricaoNewsletter[]>('/admin/newsletter', { token: lerToken() })
+// Apaga de vez todos os diagnósticos e a inscrição na newsletter daquele e-mail.
+export const apagarContato = (email: string) => chamarApi<{ diagnosticos: number; newsletter: number }>(`/admin/contatos?email=${encodeURIComponent(email)}`, { metodo: 'DELETE', token: lerToken() })

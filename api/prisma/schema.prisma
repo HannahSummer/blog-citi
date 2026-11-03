@@ -79,6 +79,10 @@ model Noticia {
   categoria       String
   subtema         String?
   continente      String?
+  /// Cidade e coordenadas (opcionais) do pino no globo.
+  local           String?
+  lat             Float?
+  lng             Float?
   fonte           String
   link            String    @unique
   data_fonte      DateTime? @db.Date

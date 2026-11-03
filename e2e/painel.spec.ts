@@ -8,7 +8,7 @@ const senha = process.env.E2E_EDITORA_SENHA
 test('sem login, o painel pede a entrada e não mostra nada interno', async ({ page }) => {
   await page.goto('/blog/admin/noticias')
   await expect(page.locator('form.admin-login')).toBeVisible()
-  await expect(page.locator('.admin-nav')).toHaveCount(0)
+  await expect(page.locator('.painel-nav')).toHaveCount(0)
 })
 
 test('senha errada mostra a mensagem genérica', async ({ page }) => {
@@ -33,7 +33,7 @@ test.describe('com conta de editora', () => {
     await page.locator('input[type="password"]').fill(senha!)
     await page.getByRole('button', { name: 'Entrar' }).click()
 
-    await expect(page.locator('.admin-nav')).toBeVisible()
+    await expect(page.locator('.painel-nav')).toBeVisible()
     await expect(page.getByRole('tab', { name: /Para revisar/ })).toBeVisible()
 
     const secoes = page.getByRole('navigation', { name: 'Seções do painel' })
@@ -60,7 +60,7 @@ test.describe('com conta de editora', () => {
     await page.locator('input[type="email"]').fill(email!)
     await page.locator('input[type="password"]').fill(senha!)
     await page.getByRole('button', { name: 'Entrar' }).click()
-    await expect(page.locator('.admin-nav')).toBeVisible()
+    await expect(page.locator('.painel-nav')).toBeVisible()
     await page.getByRole('button', { name: /Sair/ }).click()
     await expect(page.locator('form.admin-login')).toBeVisible()
   })

@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState, type DragEvent } from 'react'
-import { ChevronDown, Download, GripVertical, Mail, MessageCircle, Search } from 'lucide-react'
+import { ChevronDown, Download, GripVertical, Mail, MessageCircle, Search, Trash2 } from 'lucide-react'
 import { PainelInterno } from '../../components/painel/PainelInterno'
 import { buscarNivel, comoConheceuOpcoes, type NivelId } from '../../config/diagnostico'
 import { baixarCsv } from '../../lib/csv'
-import { atualizarStatusLead, listarLeads, listarNewsletter, statusLead, type InscricaoNewsletter, type Lead, type StatusLead } from '../../services/leads'
+import { apagarContato, atualizarStatusLead, listarLeads, listarNewsletter, statusLead, type InscricaoNewsletter, type Lead, type StatusLead } from '../../services/leads'
 
 const dataHora = (iso: string) => new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
 const dataCurta = (iso: string) => new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
@@ -47,6 +47,23 @@ function Contatos() {
     }
   }
 
+  // Apaga de vez tudo daquele e-mail (todos os diagnósticos e a newsletter), depois de confirmar.
+  const apagar = async (pessoa: Pessoa) => {
+    const quantos = (leads ?? []).filter((lead) => lead.email.toLowerCase() === pessoa.email.toLowerCase()).length
+    const partes = [quantos ? `${quantos} diagnóstico${quantos > 1 ? 's' : ''}` : '', pessoa.newsletter ? 'a inscrição na newsletter' : ''].filter(Boolean).join(' e ')
+    if (!window.confirm(`Apagar ${pessoa.lead?.nome ?? pessoa.email} (${pessoa.email})?\n\nVai apagar ${partes || 'os dados deste contato'}. Não dá para desfazer.`)) return
+    setErro('')
+    try {
+      await apagarContato(pessoa.email)
+      const mesmoEmail = (email: string) => email.toLowerCase() === pessoa.email.toLowerCase()
+      setLeads((lista) => (lista ?? []).filter((lead) => !mesmoEmail(lead.email)))
+      setInscritos((lista) => lista.filter((item) => !mesmoEmail(item.email)))
+      setAviso(`${pessoa.lead?.nome ?? pessoa.email} foi apagado(a).`)
+    } catch (e) {
+      setErro(`Não foi possível apagar: ${(e as Error).message}`)
+    }
+  }
+
   // Todo mundo numa lista só: quem fez o diagnóstico (com ou sem newsletter) e quem só assinou a newsletter.
   const pessoas = useMemo<Pessoa[]>(() => {
     const emailsDeLeads = new Set((leads ?? []).map((lead) => lead.email))
@@ -79,12 +96,12 @@ function Contatos() {
     <p className="admin-status" role="status">{aviso}</p>
     {erro && <p className="form-error" role="alert">{erro}</p>}
     {leads === null && !erro && <p className="admin-muted">Carregando…</p>}
-    {leads !== null && visao === 'pessoas' && <ListaDePessoas pessoas={pessoas} aoMudarStatus={mudarStatus} />}
+    {leads !== null && visao === 'pessoas' && <ListaDePessoas pessoas={pessoas} aoMudarStatus={mudarStatus} aoApagar={apagar} />}
     {leads !== null && visao === 'kanban' && <Kanban leads={leads} aoMudarStatus={mudarStatus} />}
   </div>
 }
 
-function ListaDePessoas({ pessoas, aoMudarStatus }: { pessoas: Pessoa[]; aoMudarStatus: (lead: Lead, status: StatusLead) => void }) {
+function ListaDePessoas({ pessoas, aoMudarStatus, aoApagar }: { pessoas: Pessoa[]; aoMudarStatus: (lead: Lead, status: StatusLead) => void; aoApagar: (pessoa: Pessoa) => void }) {
   const [busca, setBusca] = useState('')
   const [origem, setOrigem] = useState<FiltroOrigem>('todas')
   const [aberta, setAberta] = useState<string | null>(null)
@@ -141,6 +158,7 @@ function ListaDePessoas({ pessoas, aoMudarStatus }: { pessoas: Pessoa[]; aoMudar
                 <select value={lead.status} onChange={(event) => aoMudarStatus(lead, event.target.value as StatusLead)}>{statusLead.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}</select>
               </label>
             </> : <p className="admin-muted">Assinou a newsletter em {dataHora(pessoa.data)}{pessoa.origemNewsletter ? ` (origem: ${pessoa.origemNewsletter})` : ''}. Não fez o diagnóstico.</p>}
+            <button type="button" className="button-secondary admin-danger pessoa-apagar" onClick={() => aoApagar(pessoa)}><Trash2 size={15} /> Apagar contato</button>
           </div>}
         </li>
       })}

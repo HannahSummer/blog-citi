@@ -16,6 +16,9 @@ export interface NoticiaPainel {
   categoria: string
   subtema: string | null
   continente: string | null
+  local?: string | null
+  lat?: number | null
+  lng?: number | null
   fonte: string
   link: string
   data_fonte: string | null
@@ -29,7 +32,7 @@ export interface NoticiaPainel {
 
 export type CamposEditaveis = Pick<NoticiaPainel, 'titulo' | 'resumo' | 'por_que_importa' | 'categoria' | 'subtema' | 'continente' | 'link'>
 
-export function paraNewsItem(noticia: Pick<NoticiaPainel, 'id' | 'titulo' | 'resumo' | 'por_que_importa' | 'categoria' | 'continente' | 'fonte' | 'link' | 'data_fonte' | 'publicado_em'>): NewsItem {
+export function paraNewsItem(noticia: Pick<NoticiaPainel, 'id' | 'titulo' | 'resumo' | 'por_que_importa' | 'categoria' | 'continente' | 'local' | 'lat' | 'lng' | 'fonte' | 'link' | 'data_fonte' | 'publicado_em'>): NewsItem {
   return {
     slug: `n-${noticia.id.slice(0, 8)}`,
     title: noticia.titulo,
@@ -41,6 +44,8 @@ export function paraNewsItem(noticia: Pick<NoticiaPainel, 'id' | 'titulo' | 'res
     summary: noticia.resumo,
     content: noticia.por_que_importa,
     continente: noticia.continente ?? undefined,
+    local: noticia.local ?? undefined,
+    coordenadas: noticia.lat != null && noticia.lng != null ? [noticia.lng, noticia.lat] : undefined,
   }
 }
 

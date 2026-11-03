@@ -5,7 +5,7 @@ import type { StatusNoticia } from '../../../src/config/noticias'
 import type { CamposEditaveis } from './validacao'
 
 // Só o que aparece no site público.
-const COLUNAS_PUBLICAS = { id: true, titulo: true, resumo: true, por_que_importa: true, categoria: true, subtema: true, continente: true, fonte: true, link: true, data_fonte: true, publicado_em: true } as const
+const COLUNAS_PUBLICAS = { id: true, titulo: true, resumo: true, por_que_importa: true, categoria: true, subtema: true, continente: true, local: true, lat: true, lng: true, fonte: true, link: true, data_fonte: true, publicado_em: true } as const
 
 @Injectable()
 export class NoticiasService {
