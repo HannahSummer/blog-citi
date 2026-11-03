@@ -146,8 +146,37 @@ npm run api:build                   # compilar a API
 
 ## Deploy no Coolify
 
-São três recursos no mesmo projeto do Coolify: **Postgres**, **API** e **Site**. Faça nessa ordem.
+Há dois jeitos. O recomendado é o **Docker Compose**: site, API e Postgres num recurso só, descrito no arquivo `docker-compose.coolify.yml`. A configuração fica no repositório e as senhas são geradas pelo Coolify.
+O outro jeito, com três recursos separados, está logo depois e continua funcionando.
 Os nomes dos campos podem variar um pouco entre versões do Coolify.
+
+### Com Docker Compose (recomendado)
+
+1. No projeto, **+ New → Application**, escolha o repositório `blog-citi` (GitHub App do Coolify) e a branch.
+2. **Build Pack:** Docker Compose.
+   - **Base Directory:** `/`
+   - **Docker Compose Location:** `/docker-compose.coolify.yml`
+3. **Domains:** o Coolify mostra um campo para cada serviço. Coloque a porta no fim, para ele saber para onde mandar o acesso (ela não fica aberta na internet):
+   - `site`: `https://blog.citi.org.br:8080`
+   - `api`: `https://api.blog.citi.org.br:3000`
+   - `postgres`: deixe vazio.
+4. **Environment Variables:**
+   - `SITE_URL`: o domínio do site, sem a porta (`https://blog.citi.org.br`).
+   - `API_URL`: o domínio da API, sem a porta (`https://api.blog.citi.org.br`).
+   - `SERVICE_PASSWORD_POSTGRES`, `SERVICE_PASSWORD_64_JWT` e `SERVICE_PASSWORD_64_RADAR` aparecem sozinhas, já preenchidas. Não mexa nelas.
+   - Opcionais: `GITHUB_TOKEN`, `GITHUB_REPO`, `GITHUB_BRANCH` ([Artigos pelo painel](#artigos-pelo-painel)) e `SWAGGER_HABILITADO`.
+5. **Deploy.** Se faltar `SITE_URL` ou `API_URL`, o deploy para logo no começo e diz qual falta.
+6. Abra `https://<domínio da API>/api/saude`. Deve responder `{"ok":true}`.
+7. Copie o valor de `SERVICE_PASSWORD_64_RADAR` para o Secret `RADAR_TOKEN` do GitHub ([03 — Radar](03-RADAR-AUTOMATICO.md)).
+8. **Backup:** confira se o Coolify oferece backup agendado para o Postgres do compose (na tela do serviço `postgres`). Se a sua versão não oferecer, crie uma **Scheduled Task** semanal no serviço `postgres` com `pg_dump -U citi blog_citi > /var/lib/postgresql/data/backup.sql` e baixe o arquivo de vez em quando.
+
+O terminal para cadastrar editoras fica em **Terminal**, escolhendo o container `api`.
+
+Trocar de domínio depois: mude o domínio do serviço, `SITE_URL` e `API_URL` e faça **Redeploy** (o site precisa ser reconstruído, porque o endereço da API vai dentro dele).
+
+### Com três recursos separados
+
+São três recursos no mesmo projeto: **Postgres**, **API** e **Site**. Faça nessa ordem.
 
 ### 1. Postgres
 

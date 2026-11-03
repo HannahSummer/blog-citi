@@ -158,7 +158,8 @@ blog-citi/
 ├── docs/                       # 📚 guias de conteúdo, operação e repasse
 ├── docker/                     # Dockerfile de desenvolvimento e config do nginx
 ├── Dockerfile                  # site em produção
-└── docker-compose.yml          # ambiente local completo
+├── docker-compose.yml          # ambiente local completo
+└── docker-compose.coolify.yml  # produção no Coolify (site, API e banco)
 ```
 
 Algumas regras moram em `src/` e são usadas também pela API (diagnóstico, notícias, temas). Ao mudá-las, publique o site e a API. Detalhes em [docs/12](docs/12-BACKEND-E-DEPLOY.md#regras-compartilhadas).
