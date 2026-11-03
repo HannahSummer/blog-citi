@@ -212,7 +212,7 @@ Enquanto o site estiver num endereço temporário do Coolify (`*.sslip.io`), o n
 
 ### Site na Vercel (opcional)
 
-O site também pode ser publicado na Vercel, que dá HTTPS de graça (`*.vercel.app`). A API e o banco continuam no Coolify. A configuração está em `vercel.json` (rotas do React Router e cache).
+O site também pode ser publicado na Vercel, que dá HTTPS de graça (`*.vercel.app`). A API e o banco continuam no Coolify. A configuração está em `vercel.json` (rotas do React Router e cache) e `.vercelignore`, que tira a pasta `api/` do envio: sem ele, a Vercel tenta transformar a API em funções dela e o deploy falha.
 
 1. Na Vercel: **Add New → Project**, importe o repositório e escolha a branch que o Coolify publica.
 2. **Environment Variables:** `VITE_API_URL` = domínio da API **com `https://`**. Um site em HTTPS não consegue chamar uma API em `http://` (o navegador bloqueia), e o diagnóstico, a newsletter, as notícias e o painel param de funcionar.
