@@ -1,6 +1,6 @@
 import { ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { SEO } from '../components/SEO'
+import { SEO } from '../components/layout/SEO'
 import { SobreImageCard } from '../components/sobre/SobreHome'
 import { sobreConfig } from '../config/sobre'
 import { getMomentos } from '../data/momentos'

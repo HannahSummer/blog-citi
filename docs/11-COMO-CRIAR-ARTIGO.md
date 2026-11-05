@@ -1,5 +1,16 @@
 # Como criar um artigo
 
+## Pelo painel (o jeito mais simples)
+
+1. Entre em `/blog/admin/artigos` com a conta de editora e clique em **Novo artigo**.
+2. Preencha os campos. Os contadores avisam os limites (título até 65 caracteres; descrição para o Google entre 140 e 160) e o endereço final aparece logo abaixo do título.
+3. Escreva o texto em Markdown: `##` para seções, `**negrito**`, `[texto do link](https://...)`. Use **Prévia** para ver como fica.
+4. Clique em **Publicar artigo**. Ele vai ao ar em cerca de 2 minutos. Se preferir revisar antes, marque **Salvar como rascunho**: o arquivo vai para o GitHub com `draft: true` e não aparece no site.
+
+O painel usa as mesmas regras do build, então um artigo aceito pelo painel não quebra o deploy. Para isso funcionar, a API precisa do token do GitHub ([12 — Backend e deploy](12-BACKEND-E-DEPLOY.md#artigos-pelo-painel)).
+
+## Pelo terminal (para quem mexe no código)
+
 1. Abra o terminal na pasta do projeto.
 2. Rode `npm run novo-artigo` e responda às perguntas.
 3. Abra o arquivo criado em `src/content/posts/`, escreva o texto e preencha `author` e `cover`.
