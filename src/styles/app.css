@@ -527,9 +527,10 @@ a.news-card-link:hover svg, a.news-card-link:focus-visible svg { transform: tran
 .home-metodo-topo h2 span { color: rgba(227,233,229,.4); }
 .home-metodo-topo p { max-width: 600px; color: var(--muted); font-size: 18px; line-height: 1.65; }
 .home-metodo-trilha { --vao: 48px; position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--vao); margin: 72px 0 0; padding: 0; list-style: none; }
-.home-metodo-trilha::before, .home-metodo-trilha::after { position: absolute; top: 27px; right: calc((100% - 2 * var(--vao)) / 3 - 28px); left: 28px; z-index: 1; height: 2px; content: ""; border-radius: 2px; }
+.home-metodo-trilha::before, .home-metodo-trilha::after { position: absolute; top: 27px; right: calc((100% - 2 * var(--vao)) / 3 - 28px); left: 28px; z-index: 1; height: 1px; content: ""; border-radius: 1px; }
 .home-metodo-trilha::before { background: var(--line); }
-.home-metodo-trilha::after { background: linear-gradient(90deg, #3d63e0, #2fd6a0 40%, #00db59); transform: scaleX(0); transform-origin: left; transition: transform 1.6s cubic-bezier(.65,0,.35,1) .2s; box-shadow: 0 0 18px rgba(0,219,89,.5); }
+/* Linha fina, só verde, com brilho suave: liga os três ícones. */
+.home-metodo-trilha::after { background: linear-gradient(90deg, #2fd6a0, #5cf0a0 50%, #00db59); transform: scaleX(0); transform-origin: left; transition: transform 1.6s cubic-bezier(.65,0,.35,1) .2s; box-shadow: 0 0 8px rgba(0,219,89,.7), 0 0 22px rgba(0,219,89,.35); }
 .home-metodo.visivel .home-metodo-trilha::after { transform: scaleX(1); }
 .home-metodo-trilha li { position: relative; padding: 0 8px 0 0; opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; transition-delay: calc(.35s + var(--i) * .45s); }
 .home-metodo.visivel .home-metodo-trilha li { opacity: 1; transform: none; }
@@ -545,7 +546,7 @@ a.news-card-link:hover svg, a.news-card-link:focus-visible svg { transform: tran
 @media (max-width: 900px) {
   .home-metodo { padding-block: 80px; }
   .home-metodo-trilha { grid-template-columns: 1fr; gap: 36px; padding-left: 0; }
-  .home-metodo-trilha::before, .home-metodo-trilha::after { top: 0; bottom: 0; left: 27px; right: auto; width: 2px; height: auto; }
+  .home-metodo-trilha::before, .home-metodo-trilha::after { top: 0; bottom: 0; left: 27px; right: auto; width: 1px; height: auto; }
   .home-metodo-trilha::after { transform: scaleY(0); transform-origin: top; }
   .home-metodo.visivel .home-metodo-trilha::after { transform: scaleY(1); }
   .home-metodo-trilha li { display: grid; grid-template-columns: 56px 1fr; column-gap: 20px; }
