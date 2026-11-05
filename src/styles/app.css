@@ -524,14 +524,14 @@ a.news-card-link:hover svg, a.news-card-link:focus-visible svg { transform: tran
 .home-metodo-topo h2 strong { background: linear-gradient(90deg, #5b8def, #2fd6a0 35%, #00db59); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 500; }
 .home-metodo-topo h2 span { color: rgba(227,233,229,.4); }
 .home-metodo-topo p { max-width: 600px; color: var(--muted); font-size: 18px; line-height: 1.65; }
-.home-metodo-trilha { --vao: 48px; position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--vao); max-width: 1080px; margin: 72px 0 0; padding: 0; list-style: none; }
+.home-metodo-trilha { --vao: 48px; position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--vao); margin: 72px 0 0; padding: 0; list-style: none; }
 .home-metodo-trilha::before, .home-metodo-trilha::after { position: absolute; top: 27px; right: calc((100% - 2 * var(--vao)) / 3 - 28px); left: 28px; height: 2px; content: ""; border-radius: 2px; }
 .home-metodo-trilha::before { background: var(--line); }
 .home-metodo-trilha::after { background: linear-gradient(90deg, #3d63e0, #2fd6a0 40%, #00db59); transform: scaleX(0); transform-origin: left; transition: transform 1.6s cubic-bezier(.65,0,.35,1) .2s; box-shadow: 0 0 18px rgba(0,219,89,.5); }
 .home-metodo.visivel .home-metodo-trilha::after { transform: scaleX(1); }
 .home-metodo-trilha li { position: relative; padding: 0 8px 0 0; opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; transition-delay: calc(.35s + var(--i) * .45s); }
 .home-metodo.visivel .home-metodo-trilha li { opacity: 1; transform: none; }
-.home-metodo-no { position: relative; z-index: 1; display: grid; width: 56px; height: 56px; place-items: center; border: 1px solid var(--citi-border-green); border-radius: 18px; color: var(--lime); background: #16231b; box-shadow: 0 0 0 6px var(--paper); transition: background .4s, color .4s; transition-delay: calc(.6s + var(--i) * .45s); }
+.home-metodo-no { position: relative; z-index: 1; display: grid; width: 56px; height: 56px; place-items: center; border: 1px solid var(--citi-border-green); border-radius: 18px; color: var(--lime); background: #16231b; transition: background .4s, color .4s; transition-delay: calc(.6s + var(--i) * .45s); }
 .home-metodo.visivel .home-metodo-no { color: #000; background: var(--lime); }
 /* O número vai junto do rótulo (01 · Ponto de partida), sem o numeral gigante solto no canto. */
 .home-metodo-numero { margin-right: 8px; padding-right: 8px; border-right: 1px solid var(--citi-border-green); color: var(--muted); }
