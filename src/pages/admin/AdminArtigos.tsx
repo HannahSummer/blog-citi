@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { AlertTriangle, Check, ExternalLink, Eye, PenLine, Plus, X } from 'lucide-react'
 import { PainelInterno } from '../../components/painel/PainelInterno'
 import { etapasFunil, limitesArtigo, slugDoTitulo, tiposCta, validarArtigo, type ArtigoCampos, type ErrosArtigo } from '../../config/artigos'
@@ -132,7 +133,7 @@ function FormularioArtigo({ onCancelar, onPublicado }: { onCancelar: () => void;
         <button type="button" className="button-secondary" onClick={() => setPrevia((valor) => !valor)}>{previa ? <><PenLine size={14} /> Editar</> : <><Eye size={14} /> Prévia</>}</button>
       </div>
       {previa
-        ? <div className="markdown artigo-previa"><ReactMarkdown>{campos.corpo || '_O texto aparece aqui._'}</ReactMarkdown></div>
+        ? <div className="markdown artigo-previa"><ReactMarkdown remarkPlugins={[remarkGfm]}>{campos.corpo || '_O texto aparece aqui._'}</ReactMarkdown></div>
         : <textarea className="artigo-corpo" rows={18} value={campos.corpo} placeholder={'## Primeira seção\n\nTexto do parágrafo, com [links](https://exemplo.com) para as fontes.'} onChange={(event) => update('corpo', event.target.value)} aria-label="Texto do artigo" aria-invalid={Boolean(erros.corpo) || undefined} />}
       <small className={faixa && (palavras < faixa[0] || palavras > faixa[1]) ? 'admin-contador fora' : 'admin-contador'}>{palavras} palavras{faixa ? ` (recomendado: ${faixa[0]} a ${faixa[1]})` : ''}</small>
       {erroDe('corpo')}

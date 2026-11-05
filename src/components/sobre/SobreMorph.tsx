@@ -119,7 +119,8 @@ export function SobreMorph({ titulo, destaque, descricao }: { titulo: string; de
       if (arcoRef.current) {
         const t = limitar((morph - 0.75) / 0.25)
         arcoRef.current.style.opacity = String(t)
-        arcoRef.current.style.transform = `translateY(${(1 - t) * 24}px)`
+        // Tudo no transform (sem a propriedade `translate`, que navegadores antigos de celular ignoram e tiram o texto do centro).
+        arcoRef.current.style.transform = `translate(-50%, ${(1 - t) * 24}px)`
       }
       if (visivel) quadro = requestAnimationFrame(passo)
     }
