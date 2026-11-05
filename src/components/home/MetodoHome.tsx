@@ -32,6 +32,7 @@ export function MetodoHome() {
         {methodology.cards.map(([rotulo, titulo, texto], indice) => {
           const Icone = ICONES[indice] ?? Target
           return <li key={titulo} style={{ '--i': indice } as CSSProperties}>
+            <span className="home-metodo-fantasma" aria-hidden="true">{indice + 1}</span>
             <span className="home-metodo-no" aria-hidden="true"><Icone size={20} /></span>
             <small><span className="home-metodo-numero" aria-hidden="true">{String(indice + 1).padStart(2, '0')}</span>{rotulo}</small>
             <h3>{titulo}</h3>
