@@ -1,12 +1,13 @@
-import { BookOpen, Gauge, House, Newspaper } from 'lucide-react'
+import { BookOpen, Gauge, House, Newspaper, Users } from 'lucide-react'
 import { NavLink, useLocation } from 'react-router-dom'
 
-// Atalhos fixos no rodapé da tela, só no celular e tablet (até 900 px): as quatro áreas principais
+// Atalhos fixos no rodapé da tela, só no celular e tablet (até 900 px): as cinco áreas principais
 // sempre visíveis, com ícone e nome, sem precisar abrir o menu. O diagnóstico fica em destaque.
 const itens = [
   { rotulo: 'Início', href: '/blog', Icone: House, exato: true, destaque: false },
   { rotulo: 'Blog', href: '/blog/artigos', Icone: BookOpen, exato: false, destaque: false },
   { rotulo: 'Notícias', href: '/blog/noticias', Icone: Newspaper, exato: false, destaque: false },
+  { rotulo: 'Sobre', href: '/blog/sobre', Icone: Users, exato: false, destaque: false },
   { rotulo: 'Diagnóstico', href: '/blog/diagnostico', Icone: Gauge, exato: false, destaque: true },
 ]
 
