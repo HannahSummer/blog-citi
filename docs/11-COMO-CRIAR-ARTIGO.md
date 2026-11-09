@@ -19,6 +19,23 @@ O painel usa as mesmas regras do build, então um artigo aceito pelo painel não
 6. Troque `draft: true` para `draft: false` quando estiver pronto.
 7. Envie pelo fluxo de Pull Request que o time já usa.
 
+## Conferir o SEO com o Yoast
+
+O blog usa a mesma análise do plugin [Yoast SEO](https://yoast.com/) para WordPress (pacote oficial `yoastseo`), adaptada para os artigos em Markdown. Ela dá duas notas de 0 a 100, com as cores do plugin: **SEO** (frase-chave, título, meta description, links) e **Legibilidade** (tamanho das frases e parágrafos, subtítulos, palavras de ligação).
+
+```bash
+npm run seo                     # resumo de todos os artigos publicados
+npm run seo -- <slug>           # detalhes de um artigo, com o que fazer em cada item
+```
+
+- A **frase-chave** é a primeira palavra-chave de `palavras_chave`. Escolha a forma como as pessoas buscam no Google.
+- Mire em verde (70 ou mais) nas duas notas, mas o texto claro para o leitor vem antes da nota. Não repita a frase-chave de forma forçada.
+- **Pode ignorar** o item "frase-chave no texto alternativo da capa": as capas são ilustrações abstratas, e o texto alternativo deve descrever a imagem.
+- "Links para outros sites" pede uma fonte externa. Use quando o artigo citar dado, pesquisa ou ferramenta; não invente link só para a nota.
+- Mudar o nome do arquivo (slug) muda o endereço. Faça só **antes** de publicar.
+
+O `npm run seo` não roda no painel nem trava o build: é uma conferência para fazer antes de publicar.
+
 ## Campos
 
 | Campo | Significado e valores aceitos |
