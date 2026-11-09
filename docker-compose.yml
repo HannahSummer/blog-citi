@@ -1,8 +1,11 @@
+# Ambiente local completo: site (5173), API (3000) e Postgres (5433 no seu computador).
+#   docker compose up -d --build
+# Na primeira vez, cadastre uma editora para o painel (ver docs/12-BACKEND-E-DEPLOY.md).
 services:
   blog-citi:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: docker/Dockerfile.dev
     ports:
       - "5173:5173"
     volumes:
@@ -10,3 +13,50 @@ services:
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - VITE_API_URL=http://localhost:3000
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+      target: dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/api/node_modules
+    environment:
+      - DATABASE_URL=postgresql://citi:citi@postgres:5432/blog_citi
+      # Valores só para desenvolvimento. Em produção, gere outros (ver api/.env.example).
+      - JWT_SECRET=desenvolvimento-local-nao-use-em-producao-0000
+      - RADAR_TOKEN=radar-local-nao-use-em-producao-000000000000
+      - SITE_URL=http://localhost:5173
+      # Documentação da API em http://localhost:3000/api/docs (desligue em produção).
+      - SWAGGER_HABILITADO=true
+      # Limite de envios por IP desligado no ambiente local, para os testes de navegador (npm run test:e2e) não travarem.
+      # Em produção a variável não existe e o limite fica ligado. Os testes da API cobrem o limite.
+      - LIMITE_ENVIOS=false
+      - CHOKIDAR_USEPOLLING=true
+      - TSC_WATCHFILE=DynamicPriorityPolling
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17-alpine
+    ports:
+      # 5433 no seu computador, para não brigar com outro Postgres instalado.
+      - "5433:5432"
+    environment:
+      - POSTGRES_USER=citi
+      - POSTGRES_PASSWORD=citi
+      - POSTGRES_DB=blog_citi
+    volumes:
+      - postgres-dados:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U citi -d blog_citi"]
+      interval: 5s
+      retries: 10
+
+volumes:
+  postgres-dados:

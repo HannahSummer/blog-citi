@@ -6,7 +6,7 @@
  *
  * Variáveis de ambiente:
  *   ANTHROPIC_API_KEY                        → escreve a copy (sem ela, para depois do relatório)
- *   SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY → envia ao painel (sem elas, só gera a prévia local)
+ *   API_URL + RADAR_TOKEN                    → envia ao painel pela API (sem elas, só gera a prévia local)
  *
  * Sempre gera radar/relatorios/radar-AAAA-MM-DD.md e, com a copy, radar/sugestoes/semana-AAAA-MM-DD.md.
  */
@@ -17,7 +17,7 @@ import { coletarTodas } from './coletar'
 import { pontuar } from './pontuar'
 import { escreverRelatorio } from './relatorio'
 import { clienteClaude, redigir } from './redigir'
-import { bancoConfigurado, enviarSugestoes, type SugestaoNoticia } from './enviar'
+import { apiConfigurada, enviarSugestoes, type SugestaoNoticia } from './enviar'
 import { dataISO } from './texto'
 
 const PASTA_SUGESTOES = 'radar/sugestoes'
@@ -80,8 +80,8 @@ async function main() {
   await writeFile(arquivoPrevia, previa(sugestoes, semana), 'utf8')
   console.log(`${sugestoes.length} sugestões. Prévia: ${arquivoPrevia}`)
 
-  if (!bancoConfigurado()) {
-    console.log('SUPABASE_URL/SUPABASE_SERVICE_ROLE_KEY ausentes: nada foi enviado ao painel.')
+  if (!apiConfigurada()) {
+    console.log('API_URL/RADAR_TOKEN ausentes: nada foi enviado ao painel.')
     return
   }
   const { enviadas, repetidas, erros } = await enviarSugestoes(sugestoes)
