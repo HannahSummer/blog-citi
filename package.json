@@ -8,6 +8,7 @@
     "build": "npm run validar-artigos && vite build",
     "novo-artigo": "tsx scripts/novo-artigo.ts",
     "validar-artigos": "tsx scripts/validar-artigos.ts",
+    "seo": "tsx scripts/seo/yoast.ts",
     "typecheck": "tsc --noEmit",
     "radar": "tsx scripts/radar/index.ts",
     "radar:promover": "tsx scripts/radar/promover.ts",
@@ -48,10 +49,12 @@
     "@types/react-dom": "^19.3.0",
     "@types/topojson-client": "^3.1.5",
     "@vitejs/plugin-react": "^5.0.4",
+    "marked": "^14.1.4",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "^7.1.7",
     "vitest": "^5.0.5",
+    "yoastseo": "^3.6.0",
     "zod": "^4.6.7"
   }
 }
