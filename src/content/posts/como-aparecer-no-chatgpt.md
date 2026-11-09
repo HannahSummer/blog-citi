@@ -11,7 +11,7 @@ cta_link: ""
 cover: "/images/covers/como-aparecer-no-chatgpt.webp"
 cover_alt: "Ilustração abstrata de barras verticais que formam uma onda, em degradê azul e verde"
 author: "Equipe CITi"
-featured: true
+featured: false
 draft: false
 palavras_chave: "como aparecer no ChatGPT, GEO, SEO para IA"
 ---
