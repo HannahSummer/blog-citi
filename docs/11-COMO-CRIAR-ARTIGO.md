@@ -1,5 +1,16 @@
 # Como criar um artigo
 
+## Pelo painel (o jeito mais simples)
+
+1. Entre em `/blog/admin/artigos` com a conta de editora e clique em **Novo artigo**.
+2. Preencha os campos. Os contadores avisam os limites (título até 65 caracteres; descrição para o Google entre 140 e 160) e o endereço final aparece logo abaixo do título.
+3. Escreva o texto em Markdown: `##` para seções, `**negrito**`, `[texto do link](https://...)`. Use **Prévia** para ver como fica.
+4. Clique em **Publicar artigo**. Ele vai ao ar em cerca de 2 minutos. Se preferir revisar antes, marque **Salvar como rascunho**: o arquivo vai para o GitHub com `draft: true` e não aparece no site.
+
+O painel usa as mesmas regras do build, então um artigo aceito pelo painel não quebra o deploy. Para isso funcionar, a API precisa do token do GitHub ([12 — Backend e deploy](12-BACKEND-E-DEPLOY.md#artigos-pelo-painel)).
+
+## Pelo terminal (para quem mexe no código)
+
 1. Abra o terminal na pasta do projeto.
 2. Rode `npm run novo-artigo` e responda às perguntas.
 3. Abra o arquivo criado em `src/content/posts/`, escreva o texto e preencha `author` e `cover`.
@@ -7,6 +18,23 @@
 5. Veja o resultado em `http://localhost:5173/blog/artigos/<slug>`.
 6. Troque `draft: true` para `draft: false` quando estiver pronto.
 7. Envie pelo fluxo de Pull Request que o time já usa.
+
+## Conferir o SEO com o Yoast
+
+O blog usa a mesma análise do plugin [Yoast SEO](https://yoast.com/) para WordPress (pacote oficial `yoastseo`), adaptada para os artigos em Markdown. Ela dá duas notas de 0 a 100, com as cores do plugin: **SEO** (frase-chave, título, meta description, links) e **Legibilidade** (tamanho das frases e parágrafos, subtítulos, palavras de ligação).
+
+```bash
+npm run seo                     # resumo de todos os artigos publicados
+npm run seo -- <slug>           # detalhes de um artigo, com o que fazer em cada item
+```
+
+- A **frase-chave** é a primeira palavra-chave de `palavras_chave`. Escolha a forma como as pessoas buscam no Google.
+- Mire em verde (70 ou mais) nas duas notas, mas o texto claro para o leitor vem antes da nota. Não repita a frase-chave de forma forçada.
+- **Pode ignorar** o item "frase-chave no texto alternativo da capa": as capas são ilustrações abstratas, e o texto alternativo deve descrever a imagem.
+- "Links para outros sites" pede uma fonte externa. Use quando o artigo citar dado, pesquisa ou ferramenta; não invente link só para a nota.
+- Mudar o nome do arquivo (slug) muda o endereço. Faça só **antes** de publicar.
+
+O `npm run seo` não roda no painel nem trava o build: é uma conferência para fazer antes de publicar.
 
 ## Campos
 

@@ -2,7 +2,7 @@
 title: "Como aparecer no ChatGPT e na busca com IA: guia para PMEs"
 excerpt: "Seus clientes já perguntam ao ChatGPT e ao Gemini antes de chegar ao seu site. Veja o que muda, o que a sua empresa controla e como medir."
 meta_description: "Como aparecer no ChatGPT, no Gemini e na Visão Geral do Google sem abandonar o SEO: o que muda na busca em 2026, o que sua empresa controla e como medir."
-date: "2026-10-30"
+date: "2026-11-03"
 categoria: "negocios"
 subtema: "marketing"
 etapa_funil: "awareness"
@@ -11,7 +11,7 @@ cta_link: ""
 cover: "/images/covers/como-aparecer-no-chatgpt.webp"
 cover_alt: "Ilustração abstrata de barras verticais que formam uma onda, em degradê azul e verde"
 author: "Equipe CITi"
-featured: true
+featured: false
 draft: false
 palavras_chave: "como aparecer no ChatGPT, GEO, SEO para IA"
 ---
