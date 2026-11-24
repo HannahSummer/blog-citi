@@ -11,7 +11,7 @@ cta_link: ""
 cover: "/images/covers/sistema-legado-virou-gargalo.webp"
 cover_alt: "Ilustração abstrata de faixas com hachuras diagonais, em degradê azul e verde"
 author: "Equipe CITi"
-featured: true
+featured: false
 draft: false
 palavras_chave: "sistema legado, modernização de sistemas, evolução de software, integração de sistemas"
 ---
