@@ -1,9 +1,9 @@
 export const siteConfig = {
   name: 'Blog CITi',
-  // Liga sozinho quando as duas variáveis do Supabase estão no .env.
-  diagnosticoComBanco: Boolean(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY),
+  // Liga sozinho quando VITE_API_URL (endereço da API) está definida.
+  diagnosticoComBanco: Boolean(import.meta.env.VITE_API_URL),
   // Em `npm run dev` sem .env, o formulário aparece e o envio é simulado (modo demonstração).
-  diagnosticoModoDemonstracao: import.meta.env.DEV && !(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY),
+  diagnosticoModoDemonstracao: import.meta.env.DEV && !import.meta.env.VITE_API_URL,
   ctaContatoUrl: '',
   linkedin: 'https://www.linkedin.com/company/citiufpe/',
   instagram: 'https://www.instagram.com/citiufpe/',

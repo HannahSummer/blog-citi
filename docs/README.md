@@ -10,7 +10,10 @@
 | [02 — Notícias](02-NOTICIAS.md) | Curadoria | Estrutura das notícias, regras editoriais, painel de aprovação e rotina semanal |
 | [03 — Radar automático](03-RADAR-AUTOMATICO.md) | Curadoria + dev | Fontes mapeadas por tema, copy com o Claude, configuração e agendamento |
 | [04 — Estratégia editorial](04-ESTRATEGIA-EDITORIAL.md) | Marketing, Gerente, CRO | Mapa de conteúdo, temas prioritários, primeiras pautas, como pesquisar |
-| [05 — Diagnóstico e leads](05-DIAGNOSTICO-E-LEADS.md) | Comercial + dev | Como o diagnóstico funciona, configuração do Supabase, onde ver e responder leads, newsletter, como mudar perguntas e pendências de produção |
+| [05 — Diagnóstico e leads](05-DIAGNOSTICO-E-LEADS.md) | Comercial + dev | Como o diagnóstico funciona, onde ver e responder leads (painel), newsletter, como mudar perguntas e pendências de produção |
+| [11 — Como criar artigo](11-COMO-CRIAR-ARTIGO.md) | Quem escreve | Passo a passo de um artigo novo, do rascunho à publicação |
+| [12 — Backend e deploy](12-BACKEND-E-DEPLOY.md) | Dev | API (NestJS), banco (Postgres), variáveis, deploy no Coolify, editoras, migrações e backups |
+| [13 — Rotina e repasse](13-ROTINA-E-REPASSE.md) | Todo mundo que assume o blog | Rotina semanal, acessos, entrada e saída de pessoas, onde está cada coisa |
 
 ## Como o blog funciona (visão geral)
 
@@ -57,7 +60,7 @@ Recomendação: controlar esse fluxo em um quadro (Notion ou Jira) com uma colun
 
 | Quando | O quê | Responsável |
 |---|---|---|
-| Segunda, manhã | Radar roda sozinho e abre um PR com candidatos | Automático |
+| Segunda, manhã | Radar roda sozinho e envia as sugestões ao painel /blog/admin/noticias | Automático |
 | Segunda a terça | Curadoria escolhe 3 a 5 notícias, escreve e publica | Curadoria |
 | A cada 10–15 dias | Publicação de 1 artigo | Editora |
 | Mensal | Revisão de métricas com o Comercial (leads e MQLs por post) | Editora + Comercial |
@@ -67,4 +70,4 @@ Recomendação: controlar esse fluxo em um quadro (Notion ou Jira) com uma colun
 
 - Stack e hospedagem finais (a SPA precisa de geração estática para SEO e prévia de links no LinkedIn).
 - Se o time de marketing vai publicar por Git ou por um CMS com interface (Decap, Keystatic, TinaCMS).
-- Destino real dos formulários (CRM ou Supabase) e política de privacidade.
+- Integração dos leads com um CRM (hoje ficam no painel /blog/admin/leads) e política de privacidade.

@@ -1,8 +1,8 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_SUPABASE_URL: string
-  readonly VITE_SUPABASE_ANON_KEY: string
+  // Endereço da API (sem /api no fim), por exemplo https://api.blog.citi.org.br
+  readonly VITE_API_URL?: string
 }
 
 interface ImportMeta {

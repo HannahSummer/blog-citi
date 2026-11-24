@@ -29,8 +29,9 @@ jobs:
         run: npm run radar:semanal
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          # Endereço da API (ex.: https://api.blog.citi.org.br) e o mesmo RADAR_TOKEN cadastrado no Coolify.
+          API_URL: ${{ secrets.API_URL }}
+          RADAR_TOKEN: ${{ secrets.RADAR_TOKEN }}
 
       # Relatório completo e prévia da copy ficam guardados 30 dias na execução.
       - name: Guardar relatório e prévia

@@ -1,17 +1,17 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, relative } from 'node:path'
 import { parseFrontMatter, type FrontMatter } from '../src/lib/frontMatter'
+// Mesmas listas e limites usados pelo painel e pela API (src/config/artigos.ts).
+import { camposObrigatorios, etapasFunil, limitesArtigo, tiposCta } from '../src/config/artigos'
+import { categories } from '../src/data/categorias'
+import { subtemas } from '../src/data/subtemas'
 
 const root = process.cwd()
 const postsDirectory = join(root, 'src', 'content', 'posts')
-const validCategories = new Set(['negocios', 'solucoes', 'gestao'])
-const validFunnelStages = new Set(['awareness', 'consideracao', 'intencao'])
-const validCtaTypes = new Set(['diagnostico', 'material-rico', 'newsletter'])
-const validSubthemes: Record<string, string> = {
-  marketing: 'negocios', vendas: 'negocios',
-  dados: 'solucoes', desenvolvimento: 'solucoes', inovacao: 'solucoes', 'experiencia-do-cliente': 'solucoes',
-  'gestao-empresarial': 'gestao', 'big-techs': 'gestao', financas: 'gestao',
-}
+const validCategories = new Set(categories.map((categoria) => categoria.slug))
+const validFunnelStages = new Set<string>(etapasFunil.map((etapa) => etapa.value))
+const validCtaTypes = new Set<string>(tiposCta.map((cta) => cta.value))
+const validSubthemes: Record<string, string> = Object.fromEntries(subtemas.map((subtema) => [subtema.slug, subtema.parentSlug]))
 type Problem = { file: string; field: string; message: string }
 
 const errors: Problem[] = []
@@ -21,13 +21,13 @@ const value = (metadata: FrontMatter, key: string) => metadata[key]
 
 function validate(file: string, metadata: FrontMatter, content: string) {
   const displayFile = relative(root, file)
-  const required = ['title', 'excerpt', 'meta_description', 'date', 'categoria', 'etapa_funil', 'cta_tipo', 'author', 'palavras_chave']
-  for (const field of required) if (typeof value(metadata, field) !== 'string' || !String(value(metadata, field)).trim()) add(errors, displayFile, field, 'campo obrigatório ausente ou vazio')
+  for (const field of camposObrigatorios) if (typeof value(metadata, field) !== 'string' || !String(value(metadata, field)).trim()) add(errors, displayFile, field, 'campo obrigatório ausente ou vazio')
 
   const title = String(value(metadata, 'title') ?? '')
-  if (title.length > 65) add(errors, displayFile, 'title', `possui ${title.length} caracteres; o limite é 65`)
+  if (title.length > limitesArtigo.titulo) add(errors, displayFile, 'title', `possui ${title.length} caracteres; o limite é ${limitesArtigo.titulo}`)
   const metaDescription = String(value(metadata, 'meta_description') ?? '')
-  if (metaDescription.length < 140 || metaDescription.length > 160) add(errors, displayFile, 'meta_description', `possui ${metaDescription.length} caracteres; o intervalo é 140 a 160`)
+  const [metaMin, metaMax] = limitesArtigo.metaDescription
+  if (metaDescription.length < metaMin || metaDescription.length > metaMax) add(errors, displayFile, 'meta_description', `possui ${metaDescription.length} caracteres; o intervalo é ${metaMin} a ${metaMax}`)
 
   const date = String(value(metadata, 'date') ?? '')
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) add(errors, displayFile, 'date', 'deve usar o formato AAAA-MM-DD')

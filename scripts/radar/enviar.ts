@@ -1,11 +1,11 @@
 /**
- * Grava as sugestões da semana na tabela `noticias` como `pendente`.
+ * Envia as sugestões da semana para a API do blog, que as grava como `pendente`
+ * para revisão no painel /blog/admin/noticias.
  *
- * Usa SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY do ambiente. A service_role
- * ignora o RLS, por isso só existe no GitHub Secrets e no .env local de quem
- * roda o radar. Nunca use VITE_ nem coloque essa chave no site.
+ * Usa API_URL (endereço da API, sem /api) e RADAR_TOKEN do ambiente. O token só
+ * existe no GitHub Secrets, no Coolify (serviço da API) e no .env local de quem roda o radar.
+ * Nunca use VITE_ nem coloque esse token no site.
  */
-import { createClient } from '@supabase/supabase-js'
 
 export interface SugestaoNoticia {
   semana: string
@@ -24,21 +24,18 @@ export interface SugestaoNoticia {
   pontuacao: number
 }
 
-export function bancoConfigurado(): boolean {
-  return Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY)
+export function apiConfigurada(): boolean {
+  return Boolean(process.env.API_URL && process.env.RADAR_TOKEN)
 }
 
-/** Insere uma por uma para que um item inválido não derrube os outros. Links repetidos são ignorados. */
+/** A API grava uma por uma: um item inválido não derruba os outros e links repetidos são ignorados. */
 export async function enviarSugestoes(sugestoes: SugestaoNoticia[]): Promise<{ enviadas: number; repetidas: number; erros: string[] }> {
-  const banco = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, { auth: { persistSession: false } })
-  let enviadas = 0
-  let repetidas = 0
-  const erros: string[] = []
-  for (const sugestao of sugestoes) {
-    const { error } = await banco.from('noticias').insert(sugestao)
-    if (!error) enviadas++
-    else if (error.code === '23505') repetidas++
-    else erros.push(`${sugestao.titulo}: ${error.message}`)
-  }
-  return { enviadas, repetidas, erros }
+  const resposta = await fetch(`${process.env.API_URL!.replace(/\/$/, '')}/api/radar/noticias`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${process.env.RADAR_TOKEN}` },
+    body: JSON.stringify({ sugestoes }),
+  })
+  const dados = await resposta.json().catch(() => null)
+  if (!resposta.ok) return { enviadas: 0, repetidas: 0, erros: [`API respondeu ${resposta.status}: ${dados?.erro ?? 'sem detalhes'}`] }
+  return dados
 }

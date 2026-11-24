@@ -6,16 +6,16 @@ import { useNoticias } from '../hooks/useNoticias'
 import { posts } from '../data/posts'
 import { categories } from '../data/categorias'
 import { subtemas } from '../data/subtemas'
-import { PostCard, PostDestaque } from '../components/PostCard'
-import { NewsSidebar } from '../components/NewsSidebar'
-import { NewsletterBlock } from '../components/NewsletterBlock'
-import { SEO } from '../components/SEO'
-import HeroImagemGirando from '../components/HeroImagemGirando'
+import { PostCard, PostDestaque } from '../components/blog/PostCard'
+import { NewsSidebar } from '../components/noticias/NewsSidebar'
+import { NewsletterBlock } from '../components/newsletter/NewsletterBlock'
+import { SEO } from '../components/layout/SEO'
+import HeroImagemGirando from '../components/efeitos/HeroImagemGirando'
 import { SobreHome } from '../components/sobre/SobreHome'
-import { MetodoHome } from '../components/MetodoHome'
+import { MetodoHome } from '../components/home/MetodoHome'
 
 // O globo (d3 + mapa) só é baixado quando a Home é aberta.
-const GloboNoticias = lazy(() => import('../components/GloboNoticias'))
+const GloboNoticias = lazy(() => import('../components/noticias/GloboNoticias'))
 
 const contar = (categoria: string, subtema?: string) => posts.filter((post) => post.categorySlug === categoria && (!subtema || post.subtema === subtema)).length
 
