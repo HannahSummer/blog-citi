@@ -1,12 +1,10 @@
-import type { Session } from '@supabase/supabase-js'
-import { supabase } from '../lib/supabase'
+import { apiConfigurada, chamarApi } from '../lib/api'
+import { lerToken } from './painel'
 import { getCategory } from '../data/categorias'
 import type { NewsItem } from '../data/noticias'
+import type { StatusNoticia } from '../config/noticias'
 
-// Notícias aprovadas no painel. As colunas listadas são as únicas que o site (anon) pode ler.
-const COLUNAS_PUBLICAS = 'id, titulo, resumo, por_que_importa, categoria, subtema, continente, fonte, link, data_fonte, publicado_em'
-
-export type StatusNoticia = 'pendente' | 'aprovada' | 'rejeitada'
+export type { StatusNoticia }
 
 export interface NoticiaPainel {
   id: string
@@ -18,6 +16,9 @@ export interface NoticiaPainel {
   categoria: string
   subtema: string | null
   continente: string | null
+  local?: string | null
+  lat?: number | null
+  lng?: number | null
   fonte: string
   link: string
   data_fonte: string | null
@@ -31,7 +32,7 @@ export interface NoticiaPainel {
 
 export type CamposEditaveis = Pick<NoticiaPainel, 'titulo' | 'resumo' | 'por_que_importa' | 'categoria' | 'subtema' | 'continente' | 'link'>
 
-export function paraNewsItem(noticia: Pick<NoticiaPainel, 'id' | 'titulo' | 'resumo' | 'por_que_importa' | 'categoria' | 'continente' | 'fonte' | 'link' | 'data_fonte' | 'publicado_em'>): NewsItem {
+export function paraNewsItem(noticia: Pick<NoticiaPainel, 'id' | 'titulo' | 'resumo' | 'por_que_importa' | 'categoria' | 'continente' | 'local' | 'lat' | 'lng' | 'fonte' | 'link' | 'data_fonte' | 'publicado_em'>): NewsItem {
   return {
     slug: `n-${noticia.id.slice(0, 8)}`,
     title: noticia.titulo,
@@ -43,48 +44,35 @@ export function paraNewsItem(noticia: Pick<NoticiaPainel, 'id' | 'titulo' | 'res
     summary: noticia.resumo,
     content: noticia.por_que_importa,
     continente: noticia.continente ?? undefined,
+    local: noticia.local ?? undefined,
+    coordenadas: noticia.lat != null && noticia.lng != null ? [noticia.lng, noticia.lat] : undefined,
   }
 }
 
+// Notícias aprovadas no painel (a API só devolve as colunas públicas).
 export async function buscarNoticiasPublicadas(): Promise<NewsItem[]> {
-  if (!supabase) return []
-  const { data, error } = await supabase.from('noticias').select(COLUNAS_PUBLICAS).eq('status', 'aprovada').order('publicado_em', { ascending: false }).limit(60)
-  if (error) { console.warn('[noticias] Não foi possível carregar as notícias aprovadas.', error.message); return [] }
-  return (data ?? []).map((linha) => paraNewsItem(linha as NoticiaPainel))
+  if (!apiConfigurada) return []
+  try {
+    return (await chamarApi<NoticiaPainel[]>('/noticias')).map(paraNewsItem)
+  } catch (erro) {
+    console.warn('[noticias] Não foi possível carregar as notícias aprovadas.', (erro as Error).message)
+    return []
+  }
 }
 
-// Painel de aprovação (só editores; o banco recusa os demais).
-
-export async function sessaoAtual(): Promise<Session | null> {
-  if (!supabase) return null
-  return (await supabase.auth.getSession()).data.session
-}
-
-export async function entrar(email: string, senha: string): Promise<string | null> {
-  if (!supabase) return 'Supabase não configurado.'
-  const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password: senha })
-  return error ? 'E-mail ou senha incorretos.' : null
-}
-
-export async function sair() { await supabase?.auth.signOut() }
-
-export async function souEditor(): Promise<boolean> {
-  if (!supabase) return false
-  const { data, error } = await supabase.rpc('eh_editor')
-  return !error && data === true
-}
+// Painel de aprovação (só editoras). Login e token em services/painel.ts.
 
 export async function listarNoticias(status: StatusNoticia): Promise<NoticiaPainel[]> {
-  if (!supabase) return []
-  const ordem = status === 'pendente' ? 'pontuacao' : 'revisado_em'
-  const { data, error } = await supabase.from('noticias').select('*').eq('status', status).order('semana', { ascending: false }).order(ordem, { ascending: false, nullsFirst: false }).limit(100)
-  if (error) throw new Error(error.message)
-  return (data ?? []) as NoticiaPainel[]
+  return chamarApi<NoticiaPainel[]>(`/admin/noticias?status=${status}`, { token: lerToken() })
 }
 
 export async function salvarNoticia(id: string, campos: Partial<CamposEditaveis> & { status?: StatusNoticia }): Promise<NoticiaPainel> {
-  if (!supabase) throw new Error('Supabase não configurado.')
-  const { data, error } = await supabase.from('noticias').update(campos).eq('id', id).select('*').single()
-  if (error) throw new Error(error.message)
-  return data as NoticiaPainel
+  return chamarApi<NoticiaPainel>(`/admin/noticias/${id}`, { metodo: 'PATCH', corpo: campos, token: lerToken() })
+}
+
+// Notícia cadastrada à mão no painel: já entra publicada.
+export interface NovaNoticia { titulo: string; resumo: string; por_que_importa: string; categoria: string; subtema: string | null; continente: string | null; fonte: string; link: string; data_fonte: string | null }
+
+export async function cadastrarNoticia(noticia: NovaNoticia): Promise<NoticiaPainel> {
+  return chamarApi<NoticiaPainel>('/admin/noticias', { metodo: 'POST', corpo: noticia, token: lerToken() })
 }

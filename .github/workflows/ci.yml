@@ -1,0 +1,78 @@
+# Integração contínua: roda em cada Pull Request e em cada push para a main.
+# Confere tipos, testes e build do site e da API. Os testes de navegador (npm run test:e2e)
+# precisam do ambiente no ar e ficam fora daqui; rode-os localmente antes do deploy.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  site:
+    name: Site (tipos, testes e build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Tipos do site
+        run: npm run typecheck
+
+      - name: Tipos do radar
+        run: npm run radar:tipos
+
+      - name: Testes (regras compartilhadas e conteúdo)
+        run: npm run test
+
+      - name: Build de produção (valida os artigos)
+        run: npm run build
+
+  api:
+    name: API (tipos, testes de integração e build)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: citi
+          POSTGRES_PASSWORD: citi
+          POSTGRES_DB: blog_citi_teste
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd "pg_isready -U citi -d blog_citi_teste"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://citi:citi@localhost:5433/blog_citi_teste
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+
+      - run: npm ci
+        working-directory: api
+
+      - name: Tipos da API
+        run: npm run api:typecheck
+
+      - name: Testes de integração da API
+        run: npm run api:test
+
+      - name: Build da API
+        run: npm run api:build

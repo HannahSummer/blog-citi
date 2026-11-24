@@ -1,0 +1,63 @@
+# Produção no Coolify: site, API e Postgres num recurso só (Build Pack "Docker Compose").
+# Para desenvolvimento no computador, use o docker-compose.yml.
+# Passo a passo em docs/12-BACKEND-E-DEPLOY.md#deploy-no-coolify.
+#
+# Variáveis preenchidas na aba Environment Variables do Coolify:
+#   SITE_URL  endereço do site, com https:// e sem barra no fim
+#   API_URL   endereço da API, com https:// e sem /api no fim
+# As variáveis SERVICE_PASSWORD_* são geradas pelo próprio Coolify no primeiro deploy.
+services:
+  site:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # O Vite grava o endereço da API no site durante o build.
+        - VITE_API_URL=${API_URL:?Preencha API_URL no Coolify}
+    expose:
+      - "8080"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+      target: producao
+    expose:
+      - "3000"
+    environment:
+      - DATABASE_URL=postgresql://citi:${SERVICE_PASSWORD_POSTGRES}@postgres:5432/blog_citi
+      - JWT_SECRET=${SERVICE_PASSWORD_64_JWT}
+      # Copie este valor para o Secret RADAR_TOKEN do GitHub (docs/03-RADAR-AUTOMATICO.md).
+      - RADAR_TOKEN=${SERVICE_PASSWORD_64_RADAR}
+      - SITE_URL=${SITE_URL:?Preencha SITE_URL no Coolify}
+      - SWAGGER_HABILITADO=${SWAGGER_HABILITADO:-false}
+      # Opcionais: publicação de artigos pelo painel (docs/12, "Artigos pelo painel").
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+      - GITHUB_REPO=${GITHUB_REPO:-HannahSummer/blog-citi}
+      - GITHUB_BRANCH=${GITHUB_BRANCH:-main}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17-alpine
+    # Sem portas abertas: só a API fala com o banco, pela rede interna do compose.
+    environment:
+      - POSTGRES_USER=citi
+      - POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRES}
+      - POSTGRES_DB=blog_citi
+    volumes:
+      - postgres-dados:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U citi -d blog_citi"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  postgres-dados:

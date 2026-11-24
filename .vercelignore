@@ -1,0 +1,4 @@
+# A Vercel trata a pasta api/ como funções dela; a API NestJS roda no Coolify, então fica de fora.
+api/
+e2e/
+radar/

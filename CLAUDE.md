@@ -13,8 +13,9 @@ A interface é em português do Brasil e o projeto está em fase de MVP.
 - Tailwind CSS v4
 - React Router
 - React Markdown
-- Supabase opcional
+- API em NestJS 11 + Prisma 6 + Postgres (pasta `api/`)
 - Scripts do Radar em TypeScript
+- Deploy no Coolify (docs/12-BACKEND-E-DEPLOY.md)
 
 ## Comandos de validação
 
@@ -23,13 +24,14 @@ Antes de concluir uma alteração, use os comandos relevantes:
 ```bash
 npm run typecheck
 npm run radar:tipos
+npm run api:typecheck
 npm run build
 ```
 
-Para desenvolvimento:
+Para desenvolvimento (site, API e Postgres):
 
 ```bash
-npm run dev
+docker compose up -d --build
 ```
 
 ## Regras de trabalho
@@ -55,6 +57,10 @@ npm run dev
 - `src/content/`: conteúdo Markdown do blog
 - `src/services/`: integrações e persistência
 - `scripts/radar/`: coleta, pontuação e promoção de notícias
+- `api/`: API NestJS (diagnóstico, newsletter, notícias, painel); banco em `api/prisma/`.
+  Ela importa regras de `src/config/diagnostico.ts`, `src/lib/diagnostico-schema.ts`,
+  `src/config/noticias.ts` e `src/data/`: ao mudar esses arquivos, valide o site e a API.
+  Migrações já aplicadas nunca são editadas; crie uma nova.
 - `docs/`: documentação editorial e operacional
 
 ## Fluxo esperado
